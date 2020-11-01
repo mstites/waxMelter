@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch</source>
+    <date>Mon 19 Oct 2020 12:51:52 AM EDT</date>
+    <tool>Eeschema (5.99.0-3636-gf745036d8)</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>Wax Melter</title>
+        <company>Maeve Stites &amp; Co.</company>
+        <rev>Rev 1.0</rev>
+        <date>2020-10-19</date>
+        <source>waxMelter.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="C1">
+      <value>0.1uF</value>
+      <footprint>Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm</footprint>
+      <datasheet>https://www.vishay.com/docs/45171/kseries.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">DK: BC1084CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Vendor Value" value="DK: BC1084CT-ND"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>caba1ebb-4857-4622-ace0-7a5db0f18a1f</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>0.1uF</value>
+      <footprint>Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm</footprint>
+      <datasheet>https://www.vishay.com/docs/45171/kseries.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">DK: BC1084CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Vendor Value" value="DK: BC1084CT-ND"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>c435bf62-508c-4fdb-b9e9-3741502dcc57</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>10uF</value>
+      <footprint>Capacitor_THT:CP_Radial_D5.0mm_P2.50mm</footprint>
+      <datasheet>https://katalog.we-online.de/pbs/datasheet/860020572003.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">DK: 732-8937-1-ND</field>
+      </fields>
+      <libsource lib="Device" part="CP1" description="Polarized capacitor, US symbol"/>
+      <property name="Vendor Value" value="DK: 732-8937-1-ND"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5974a32e-4943-40aa-a176-c1dae3636aa9</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>0.1uF</value>
+      <footprint>Capacitor_THT:C_Rect_L4.0mm_W2.5mm_P2.50mm</footprint>
+      <datasheet>https://www.vishay.com/docs/45171/kseries.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">DK: BC1084CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Vendor Value" value="DK: BC1084CT-ND"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>7d1fad70-822d-4dc9-a655-0aaf5aa70742</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>Screw_Terminal_01x02</value>
+      <footprint>waxMelter:2PIN_SCREW</footprint>
+      <datasheet>https://media.digikey.com/PDF/Data%20Sheets/Phoenix%20Contact%20PDFs/1751248.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">DK: 277-5719-ND</field>
+      </fields>
+      <libsource lib="Connector" part="Screw_Terminal_01x02" description="Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Vendor Value" value="DK: 277-5719-ND"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>d65aa53d-696d-4295-8b38-292f6dc4808a</tstamp>
+    </comp>
+    <comp ref="OLED1">
+      <value>.96_OLED</value>
+      <datasheet>https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">Amazon</field>
+      </fields>
+      <libsource lib="waxMelter" part=".96_OLED" description=""/>
+      <property name="Vendor Value" value="Amazon"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>7c3c0a53-6802-45b4-8ff8-ea29505c1063</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>4.7K</value>
+      <footprint>waxMelter:resistor 1-8</footprint>
+      <datasheet>https://www.seielect.com/catalog/sei-cf_cfm.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">DK: CF18JT4K70CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Vendor Value" value="DK: CF18JT4K70CT-ND"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>1ca8f355-b79a-4b1e-acbf-edb887e0bd05</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>4.7K</value>
+      <footprint>waxMelter:resistor 1-8</footprint>
+      <datasheet>https://www.seielect.com/catalog/sei-cf_cfm.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">DK: CF18JT4K70CT-ND</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Vendor Value" value="DK: CF18JT4K70CT-ND"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>26551bcf-df9c-439e-b51e-fb5512c51836</tstamp>
+    </comp>
+    <comp ref="SW1">
+      <value>PWR</value>
+      <footprint>Button_Switch_THT:SW_PUSH_6mm</footprint>
+      <datasheet>https://media.digikey.com/pdf/Data%20Sheets/APEM%20Components%20PDFs/MJTP%20Series-6MM.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">DK: CF14JT4K70TR-ND</field>
+      </fields>
+      <libsource lib="Switch" part="SW_Push" description="Push button switch, generic, two pins"/>
+      <property name="Vendor Value" value="DK: CF14JT4K70TR-ND"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>d19bac50-d4b7-4005-be76-8298953773c4</tstamp>
+    </comp>
+    <comp ref="SW2">
+      <value>T+</value>
+      <footprint>Button_Switch_THT:SW_PUSH_6mm</footprint>
+      <datasheet>https://media.digikey.com/pdf/Data%20Sheets/APEM%20Components%20PDFs/MJTP%20Series-6MM.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">DK: CF14JT4K70TR-ND</field>
+      </fields>
+      <libsource lib="Switch" part="SW_Push" description="Push button switch, generic, two pins"/>
+      <property name="Vendor Value" value="DK: CF14JT4K70TR-ND"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>b0f3d1b6-fb35-4768-af10-b74a6edbd3bd</tstamp>
+    </comp>
+    <comp ref="SW3">
+      <value>T-</value>
+      <footprint>Button_Switch_THT:SW_PUSH_6mm</footprint>
+      <datasheet>https://media.digikey.com/pdf/Data%20Sheets/APEM%20Components%20PDFs/MJTP%20Series-6MM.pdf</datasheet>
+      <fields>
+        <field name="Vendor Value">DK: CF14JT4K70TR-ND</field>
+      </fields>
+      <libsource lib="Switch" part="SW_Push" description="Push button switch, generic, two pins"/>
+      <property name="Vendor Value" value="DK: CF14JT4K70TR-ND"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>d30fb38c-1555-4422-ab5a-20f8b4b794db</tstamp>
+    </comp>
+    <comp ref="TC1">
+      <value>Thermocouple</value>
+      <footprint>Offboard</footprint>
+      <datasheet>K Type Thermocouple</datasheet>
+      <fields>
+        <field name="Vendor Value">Ebay, Amazon</field>
+      </fields>
+      <libsource lib="Device" part="Thermocouple" description="Thermocouple"/>
+      <property name="Vendor Value" value="Ebay, Amazon"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <property name="exclude_from_board"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>50aa979f-0188-4335-aa3e-6ab43d16c3ee</tstamp>
+    </comp>
+    <comp ref="TC2">
+      <value>Thermocouple</value>
+      <footprint>Offboard</footprint>
+      <datasheet>K Type Thermocouple</datasheet>
+      <fields>
+        <field name="Vendor Value">Ebay, Amazon</field>
+      </fields>
+      <libsource lib="Device" part="Thermocouple" description="Thermocouple"/>
+      <property name="Vendor Value" value="Ebay, Amazon"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5b7d4f83-927c-4157-8bee-a0f31e847b70</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>LD1117V33</value>
+      <footprint>Package_TO_SOT_THT:TO-262-3_Vertical</footprint>
+      <datasheet>http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00000544.pdf</datasheet>
+      <libsource lib="Regulator_Linear" part="LD1117S33TR_SOT223" description="800mA Fixed Low Drop Positive Voltage Regulator, Fixed Output 3.3V, SOT-223"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>28c7ed7f-fbde-44e4-b859-0c1b287f3a15</tstamp>
+    </comp>
+    <comp ref="U2">
+      <value>HUZZAH32_ESP32</value>
+      <footprint>waxMelter:HUZZAH_ESP32</footprint>
+      <datasheet>https://cdn-learn.adafruit.com/downloads/pdf/adafruit-huzzah32-esp32-feather.pdf?timestamp=1603059915</datasheet>
+      <fields>
+        <field name="Vendor Value">Adafruit: 3591</field>
+      </fields>
+      <libsource lib="waxMelter" part="HUZZAH32_ESP32" description=""/>
+      <property name="Vendor Value" value="Adafruit: 3591"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>cd9562e5-75be-43a0-81fa-68f742f2c943</tstamp>
+    </comp>
+    <comp ref="U3">
+      <value>AD8495_Breakout</value>
+      <footprint>waxMelter:AD8495_amplifier</footprint>
+      <datasheet>https://www.adafruit.com/product/1778</datasheet>
+      <fields>
+        <field name="Vendor Value">Adafruit: 1778</field>
+      </fields>
+      <libsource lib="waxMelter" part="AD8495_Breakout" description=""/>
+      <property name="Vendor Value" value="Adafruit: 1778"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>203e1090-62ac-40eb-9406-076bf5c140d9</tstamp>
+    </comp>
+    <comp ref="U4">
+      <value>AD8495_Breakout</value>
+      <footprint>waxMelter:AD8495_amplifier</footprint>
+      <datasheet>https://www.adafruit.com/product/1778</datasheet>
+      <fields>
+        <field name="Vendor Value">Adafruit: 1778</field>
+      </fields>
+      <libsource lib="waxMelter" part="AD8495_Breakout" description=""/>
+      <property name="Vendor Value" value="Adafruit: 1778"/>
+      <property name="Sheet name" value=""/>
+      <property name="Sheet file" value="/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>13596c39-f5bd-4cb7-a6bd-64906c27d8e8</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="Connector" part="Screw_Terminal_01x02">
+      <description>Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>TerminalBlock*:*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Screw_Terminal_01x02</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="C">
+      <description>Unpolarized capacitor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="CP1">
+      <description>Polarized capacitor, US symbol</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>CP_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">CP1</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R">
+      <description>Resistor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="Thermocouple">
+      <description>Thermocouple</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>PIN?ARRAY*</fp>
+        <fp>bornier*</fp>
+        <fp>*Terminal?Block*</fp>
+        <fp>Thermo*Couple*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">TC</field>
+        <field name="Value">Thermocouple</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="+" type="passive"/>
+        <pin num="2" name="-" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Regulator_Linear" part="LD1117S33TR_SOT223">
+      <description>800mA Fixed Low Drop Positive Voltage Regulator, Fixed Output 3.3V, SOT-223</description>
+      <docs>http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00000544.pdf</docs>
+      <footprints>
+        <fp>SOT?223*TabPin2*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">LD1117S33TR_SOT223</field>
+        <field name="Footprint">Package_TO_SOT_SMD:SOT-223-3_TabPin2</field>
+        <field name="Datasheet">http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00000544.pdf</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="power_in"/>
+        <pin num="2" name="VO" type="power_out"/>
+        <pin num="3" name="VI" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Switch" part="SW_Push">
+      <description>Push button switch, generic, two pins</description>
+      <docs>~</docs>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SW_Push</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="waxMelter" part=".96_OLED">
+      <fields>
+        <field name="Reference">OLED</field>
+        <field name="Value">.96_OLED</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="BiDi"/>
+        <pin num="2" name="VCC" type="BiDi"/>
+        <pin num="3" name="SCL" type="BiDi"/>
+        <pin num="4" name="SDA" type="BiDi"/>
+      </pins>
+    </libpart>
+    <libpart lib="waxMelter" part="AD8495_Breakout">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">AD8495_Breakout</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Ylw" type="BiDi"/>
+        <pin num="2" name="Red" type="BiDi"/>
+        <pin num="3" name="V+" type="BiDi"/>
+        <pin num="4" name="GND" type="BiDi"/>
+        <pin num="5" name="OUT" type="BiDi"/>
+        <pin num="6" name="GND" type="BiDi"/>
+      </pins>
+    </libpart>
+    <libpart lib="waxMelter" part="HUZZAH32_ESP32">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">HUZZAH32_ESP32</field>
+      </fields>
+      <pins>
+        <pin num="1" name="BAT" type="power_in"/>
+        <pin num="2" name="EN" type="BiDi"/>
+        <pin num="3" name="USB" type="BiDi"/>
+        <pin num="4" name="A12/GPIO13" type="BiDi"/>
+        <pin num="5" name="A11/GPIO12" type="BiDi"/>
+        <pin num="6" name="A10/GPIO27" type="BiDi"/>
+        <pin num="7" name="A9/GPIO33/32K" type="BiDi"/>
+        <pin num="8" name="A8/GPIO15" type="BiDi"/>
+        <pin num="9" name="A7/GPIO32/32K" type="BiDi"/>
+        <pin num="10" name="A6/GPIO14" type="BiDi"/>
+        <pin num="11" name="SCL" type="BiDi"/>
+        <pin num="12" name="SDA" type="BiDi"/>
+        <pin num="13" name="~RST" type="BiDi"/>
+        <pin num="14" name="NC" type="BiDi"/>
+        <pin num="16" name="GND" type="BiDi"/>
+        <pin num="17" name="A0/GPIO26" type="BiDi"/>
+        <pin num="18" name="A1/GPIO25" type="BiDi"/>
+        <pin num="19" name="A2/GPI34" type="BiDi"/>
+        <pin num="20" name="A3/GPI39" type="BiDi"/>
+        <pin num="21" name="A4/GPI36" type="BiDi"/>
+        <pin num="22" name="A5/GPIO4" type="BiDi"/>
+        <pin num="23" name="SCK" type="BiDi"/>
+        <pin num="24" name="MO" type="BiDi"/>
+        <pin num="25" name="MI" type="BiDi"/>
+        <pin num="26" name="RX" type="BiDi"/>
+        <pin num="27" name="TX" type="BiDi"/>
+        <pin num="28" name="21" type="BiDi"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="Connector">
+      <uri>/usr/share/kicad/library/Connector.lib</uri>
+    </library>
+    <library logical="Device">
+      <uri>/usr/share/kicad/library/Device.lib</uri>
+    </library>
+    <library logical="Regulator_Linear">
+      <uri>/usr/share/kicad/library/Regulator_Linear.lib</uri>
+    </library>
+    <library logical="Switch">
+      <uri>/usr/share/kicad/library/Switch.lib</uri>
+    </library>
+    <library logical="waxMelter">
+      <uri>/home/maeve/Documents/syncthing/school/rwm/project/waxMelter/waxMelter.kicad_sym</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="+3V3">
+      <node ref="C2" pin="1"/>
+      <node ref="C3" pin="1"/>
+      <node ref="C4" pin="1"/>
+      <node ref="R1" pin="1"/>
+      <node ref="R2" pin="1"/>
+      <node ref="U1" pin="2" pinfunction="VO"/>
+      <node ref="U3" pin="3" pinfunction="V+"/>
+      <node ref="U4" pin="3" pinfunction="V+"/>
+    </net>
+    <net code="2" name="+5V">
+      <node ref="C1" pin="2"/>
+      <node ref="U1" pin="3" pinfunction="VI"/>
+      <node ref="U2" pin="3" pinfunction="USB"/>
+    </net>
+    <net code="3" name="GND">
+      <node ref="C1" pin="1"/>
+      <node ref="C2" pin="2"/>
+      <node ref="C3" pin="2"/>
+      <node ref="J1" pin="2" pinfunction="Pin_2"/>
+      <node ref="OLED1" pin="1" pinfunction="GND"/>
+      <node ref="SW1" pin="2" pinfunction="2"/>
+      <node ref="SW2" pin="2" pinfunction="2"/>
+      <node ref="SW3" pin="2" pinfunction="2"/>
+      <node ref="U1" pin="1" pinfunction="GND"/>
+      <node ref="U2" pin="16" pinfunction="GND"/>
+      <node ref="U3" pin="4" pinfunction="GND"/>
+      <node ref="U3" pin="6" pinfunction="GND"/>
+      <node ref="U4" pin="4" pinfunction="GND"/>
+      <node ref="U4" pin="6" pinfunction="GND"/>
+    </net>
+    <net code="4" name="I2C_SCL">
+      <node ref="OLED1" pin="3" pinfunction="SCL"/>
+      <node ref="R1" pin="2"/>
+      <node ref="U2" pin="11" pinfunction="SCL"/>
+    </net>
+    <net code="5" name="I2C_SDA">
+      <node ref="OLED1" pin="4" pinfunction="SDA"/>
+      <node ref="R2" pin="2"/>
+      <node ref="U2" pin="12" pinfunction="SDA"/>
+    </net>
+    <net code="6" name="Net-(C4-Pad2)">
+      <node ref="C4" pin="2"/>
+      <node ref="OLED1" pin="2" pinfunction="VCC"/>
+    </net>
+    <net code="7" name="Net-(SW1-Pad1)">
+      <node ref="SW1" pin="1" pinfunction="1"/>
+      <node ref="U2" pin="6" pinfunction="A10/GPIO27"/>
+    </net>
+    <net code="8" name="Net-(SW2-Pad1)">
+      <node ref="SW2" pin="1" pinfunction="1"/>
+      <node ref="U2" pin="7" pinfunction="A9/GPIO33/32K"/>
+    </net>
+    <net code="9" name="Net-(SW3-Pad1)">
+      <node ref="SW3" pin="1" pinfunction="1"/>
+      <node ref="U2" pin="8" pinfunction="A8/GPIO15"/>
+    </net>
+    <net code="10" name="Net-(TC2-Pad1)">
+      <node ref="TC2" pin="1" pinfunction="+"/>
+      <node ref="U4" pin="1" pinfunction="Ylw"/>
+    </net>
+    <net code="11" name="Net-(TC2-Pad2)">
+      <node ref="TC2" pin="2" pinfunction="-"/>
+      <node ref="U4" pin="2" pinfunction="Red"/>
+    </net>
+    <net code="12" name="Net-(U2-Pad1)">
+      <node ref="U2" pin="1" pinfunction="BAT"/>
+    </net>
+    <net code="13" name="Net-(U2-Pad10)">
+      <node ref="U2" pin="10" pinfunction="A6/GPIO14"/>
+    </net>
+    <net code="14" name="Net-(U2-Pad13)">
+      <node ref="U2" pin="13" pinfunction="~RST"/>
+    </net>
+    <net code="15" name="Net-(U2-Pad14)">
+      <node ref="U2" pin="14" pinfunction="NC"/>
+    </net>
+    <net code="16" name="Net-(U2-Pad14)_1">
+      <node ref="U2" pin="14" pinfunction="+3V"/>
+    </net>
+    <net code="17" name="Net-(U2-Pad18)">
+      <node ref="U2" pin="18" pinfunction="A1/GPIO25"/>
+    </net>
+    <net code="18" name="Net-(U2-Pad19)">
+      <node ref="U2" pin="19" pinfunction="A2/GPI34"/>
+    </net>
+    <net code="19" name="Net-(U2-Pad2)">
+      <node ref="U2" pin="2" pinfunction="EN"/>
+    </net>
+    <net code="20" name="Net-(U2-Pad20)">
+      <node ref="U2" pin="20" pinfunction="A3/GPI39"/>
+    </net>
+    <net code="21" name="Net-(U2-Pad21)">
+      <node ref="U2" pin="21" pinfunction="A4/GPI36"/>
+    </net>
+    <net code="22" name="Net-(U2-Pad23)">
+      <node ref="U2" pin="23" pinfunction="SCK"/>
+    </net>
+    <net code="23" name="Net-(U2-Pad24)">
+      <node ref="U2" pin="24" pinfunction="MO"/>
+    </net>
+    <net code="24" name="Net-(U2-Pad25)">
+      <node ref="U2" pin="25" pinfunction="MI"/>
+    </net>
+    <net code="25" name="Net-(U2-Pad26)">
+      <node ref="U2" pin="26" pinfunction="RX"/>
+    </net>
+    <net code="26" name="Net-(U2-Pad27)">
+      <node ref="U2" pin="27" pinfunction="TX"/>
+    </net>
+    <net code="27" name="Net-(U2-Pad28)">
+      <node ref="U2" pin="28" pinfunction="21"/>
+    </net>
+    <net code="28" name="Net-(U2-Pad5)">
+      <node ref="U2" pin="5" pinfunction="A11/GPIO12"/>
+    </net>
+    <net code="29" name="Net-(U2-Pad9)">
+      <node ref="U2" pin="9" pinfunction="A7/GPIO32/32K"/>
+    </net>
+    <net code="30" name="Net-(U3-Pad1)">
+      <node ref="U3" pin="1" pinfunction="Ylw"/>
+    </net>
+    <net code="31" name="Net-(U3-Pad2)">
+      <node ref="U3" pin="2" pinfunction="Red"/>
+    </net>
+    <net code="32" name="OUTLET_CTRL">
+      <node ref="J1" pin="1" pinfunction="Pin_1"/>
+      <node ref="U2" pin="4" pinfunction="A12/GPIO13"/>
+    </net>
+    <net code="33" name="SENSOR_0">
+      <node ref="U2" pin="17" pinfunction="A0/GPIO26"/>
+      <node ref="U3" pin="5" pinfunction="OUT"/>
+    </net>
+    <net code="34" name="SENSOR_1">
+      <node ref="U2" pin="22" pinfunction="A5/GPIO4"/>
+      <node ref="U4" pin="5" pinfunction="OUT"/>
+    </net>
+  </nets>
+</export>
