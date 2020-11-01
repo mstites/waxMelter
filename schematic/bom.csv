@@ -1,0 +1,13 @@
+Reference,Qnty, Value, Datasheet, Vendor Value
+"C1, C2, C4",3,0.1uF,https://www.vishay.com/docs/45171/kseries.pdf,DK: BC1084CT-ND
+C3,1,10uF,https://katalog.we-online.de/pbs/datasheet/860020572003.pdf,DK: 732-8937-1-ND
+J1,1,Screw_Terminal_01x02,https://media.digikey.com/PDF/Data%20Sheets/Phoenix%20Contact%20PDFs/1751248.pdf,DK: 277-5719-ND
+OLED1,1,.96_OLED,https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf,Amazon
+"R1, R2",2,4.7K,https://www.seielect.com/catalog/sei-cf_cfm.pdf,DK: CF18JT4K70CT-ND
+SW1,1,PWR,https://media.digikey.com/pdf/Data%20Sheets/APEM%20Components%20PDFs/MJTP%20Series-6MM.pdf,DK: 679-2428-ND
+SW2,1,T+,https://media.digikey.com/pdf/Data%20Sheets/APEM%20Components%20PDFs/MJTP%20Series-6MM.pdf,DK: 679-2428-ND
+SW3,1,T-,https://media.digikey.com/pdf/Data%20Sheets/APEM%20Components%20PDFs/MJTP%20Series-6MM.pdf,DK: 679-2428-ND
+"TC1, TC2",2,Thermocouple,K Type Thermocouple,"Ebay, Amazon"
+U1,1,LD1117V33,http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00000544.pdf,DK: 497-1491-5-ND
+U2,1,HUZZAH32_ESP32,https://cdn-learn.adafruit.com/downloads/pdf/adafruit-huzzah32-esp32-feather.pdf?timestamp=1603059915,Adafruit: 3591
+"U3, U4",2,AD8495_Breakout,https://www.adafruit.com/product/1778,Adafruit: 1778
