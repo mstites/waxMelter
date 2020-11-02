@@ -7,7 +7,7 @@ Information on testing the functionality of the HUZZAH32, to help with final imp
 * Set board to "Arduino ESP32 Feather" and the upload speed to 921600
 
 ## Web Hosting
-## To Do
+### To Do
 * Explore having html files loaded in
 ### Example Files
 * [rgbWeb](https://diyusthad.com/2019/10/controlling-rgb-lights-from-esp32-web-server.html) -> RGB control via web server
