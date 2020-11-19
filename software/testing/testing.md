@@ -26,4 +26,7 @@ I am using [Button2](https://github.com/LennartHennigs/Button2) for my button ma
 * button2multiple is my preliminary implementation of managing multiple buttons and tracking long presses on the state button, which I plan to use for power off functionality.
 
 ## Relay
-Relies on the Button2 package as seen is Button2. Pressing the select button toggles the status of the relay, when connected. The example is "relayControl".
+Relies on the Button2 package as seen is button testing. Pressing the select button toggles the status of the relay, when connected. The example is "relayControl".
+
+## Temperature
+Relies on the Button2 package as seen in testing. Pressing the up button takes a temperature sample. The example is "tempTest". Will need to calibrate the sensor and the curve.
