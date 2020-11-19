@@ -14,7 +14,10 @@ void setup() {
   oled.begin(&Adafruit128x64, I2C_ADDRESS);
   oled.setFont(System5x7);
   oled.clear();
-  oled.print("Hello world!");
+  oled.print("LINE 1: A yellow line \n");
+  oled.print("LINE 2: A yellow line \n");
+  oled.println();
+  oled.println("Temperature = ");
 }
 //------------------------------------------------------------------------------
 void loop() {}
