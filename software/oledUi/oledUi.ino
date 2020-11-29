@@ -72,20 +72,43 @@ void loop() {
 }
 
 /////////////////////////////////////////////////////////////////
-// OlED Display /////////////////////////////////////////////////
+// State Handler ////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 
-void displayTemplate() {
-    oled.clear();
-    oled.println("LINE 1: A yellow line");
-    oled.println("LINE 2: A yellow line");
-    oled.println("LINE 3: A blue line ~");
-    oled.println("LINE 4: A blue line -");
-    oled.println("LINE 5: A blue line *");
-    oled.println("LINE 6: A blue line ~");
-    oled.println("LINE 7: A blue line -");
-    oled.println("LINE 8: A blue line *");
+// recieve button presses and decide what to do 
+// track current state of things: 
+// current screen
+// status
+// action
+// save values
+byte SCREEN = 0; // screen number
+int PREV_SEL = 1; // selection indicator
+
+// void updateStates
+
+void changeScreen(byte newScreen){
+  if (SCREEN != newScreen) {
+    SCREEN = newScreen; // update global
+    PREV_SEL = 1; // reset counter
+  }
 }
+
+//void updateTemp(int temp) {
+//  continue;
+//}
+
+void updateSelection(int dir) { // should be done immediately
+  if (SCREEN == 0) { // Standby
+    PREV_SEL = displayStandby(PREV_SEL, dir);
+  }
+//  else if (SCREEN == 1) { // Heating
+//    continue;
+//  }
+}
+
+/////////////////////////////////////////////////////////////////
+// OLED Display /////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 
 // display values
 void printScreen(String L1, String L2, String L3, String L4, String L5, String L6, String L7, String L8) {
@@ -145,6 +168,7 @@ int displayStandby(int prevSel, int dir) {
 
 void upPress(Button2& btn) {
     Serial.println("Up: Pressed");
+    updateSelection(1);
 }
 
 void selectPress(Button2& btn) {
@@ -162,6 +186,7 @@ void selectPress(Button2& btn) {
 
 void downPress(Button2& btn) {
     Serial.println("Down: Pressed");
+    updateSelection(-1);
 }
 
 /////////////////////////////////////////////////////////////////
