@@ -11,10 +11,10 @@
 /////////////////////////////////////////////////////////////////
 // Pin Assignments //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-const int PlATE_POWER_PIN = 26;
+const int PLATE_POWER_PIN = 26;
 
 const int UP_BUTTON_PIN = A10;
-const int SElECT_BUTTON_PIN = A9;
+const int SELECT_BUTTON_PIN = A9;
 const int DOWN_BUTTON_PIN = A8;
 
 /////////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ const int DOWN_BUTTON_PIN = A8;
 
 // BUTTONS //
 Button2 up_button = Button2(UP_BUTTON_PIN);
-Button2 select_button = Button2(SElECT_BUTTON_PIN);
+Button2 select_button = Button2(SELECT_BUTTON_PIN);
 Button2 down_button = Button2(DOWN_BUTTON_PIN);
 
 // OlED //
@@ -48,7 +48,7 @@ void setup() {
   Wire.setClock(400000l);
   oled.begin(&Adafruit128x64, I2C_ADDRESS);
   oled.setFont(System5x7);
-  displayStandby();
+  displayStandby(1, 1);
   
   // set button handlers
   up_button.setTapHandler(upPress);
@@ -56,7 +56,7 @@ void setup() {
   down_button.setTapHandler(downPress);
 
   // configure pins
-  pinMode(PlATE_POWER_PIN, OUTPUT);
+  pinMode(PLATE_POWER_PIN, OUTPUT);
 }
 
 /////////////////////////////////////////////////////////////////
@@ -77,40 +77,40 @@ void loop() {
 
 void displayTemplate() {
     oled.clear();
-    oled.println("lINE 1: A yellow line");
-    oled.println("lINE 2: A yellow line");
-    oled.println("lINE 3: A blue line ~");
-    oled.println("lINE 4: A blue line -");
-    oled.println("lINE 5: A blue line *");
-    oled.println("lINE 6: A blue line ~");
-    oled.println("lINE 7: A blue line -");
-    oled.println("lINE 8: A blue line *");
+    oled.println("LINE 1: A yellow line");
+    oled.println("LINE 2: A yellow line");
+    oled.println("LINE 3: A blue line ~");
+    oled.println("LINE 4: A blue line -");
+    oled.println("LINE 5: A blue line *");
+    oled.println("LINE 6: A blue line ~");
+    oled.println("LINE 7: A blue line -");
+    oled.println("LINE 8: A blue line *");
 }
 
 // display values
-void printScreen(String l1, String l2, String l3, String l4, String l5, String l6, String l7, String l8) {
+void printScreen(String L1, String L2, String L3, String L4, String L5, String L6, String L7, String L8) {
     oled.clear();
-    oled.println("lINE 1: A yellow line");
-    oled.println("lINE 2: A yellow line");
-    oled.println("lINE 3: A blue line ~");
-    oled.println("lINE 4: A blue line -");
-    oled.println("lINE 5: A blue line *");
-    oled.println("lINE 6: A blue line ~");
-    oled.println("lINE 7: A blue line -");
-    oled.println("lINE 8: A blue line *");
+    oled.println(L1);
+    oled.println(L2);
+    oled.println(L3);
+    oled.println(L4);
+    oled.println(L5);
+    oled.println(L6);
+    oled.println(L7);
+    oled.println(L8);
 }
 
 // move numeric selection arrow
 int updateSel (int maxSel, int prevSel, int dir) {
-    int selection;
-    selection = prevSel + dir;
-    if (selection > maxSel) {
-      selection = maxSel;
+    int sel;
+    sel = prevSel + dir;
+    if (sel > maxSel) {
+      sel = maxSel;
     }
-    else if (selection < 1) {
-      selection = 1;
+    else if (sel < 1) {
+      sel = 1;
     }
-    return(selection);
+    return(sel);
 }
 
 // standby screen
@@ -120,19 +120,23 @@ int displayStandby(int prevSel, int dir) {
     // eventually want to return current line selected
     // should pass values into here
     int maxSel = 2; 
-    selection = updateSel(maxSel, prevSel, dir);
-
-    String 
-    oled.clear();
-    oled.println("STATUS: STANDBY");
-    oled.println("");
-    oled.println("Current temp      000");
-    oled.println("Temp target       000");
-    oled.println("");
-    oled.println("Start heating");
-    oled.println("Change Target Temp");
-    oled.println("");
-    return selection;
+    int selection = updateSel(maxSel, prevSel, dir);
+    String arrow = String("`");
+    String L1 = String("STATUS: STANDBY");
+    String blank = String("");
+    String L3 = String("Current temp      000");
+    String L4 = String("Temp target       000");
+    if (selection == 2) {
+        String L6 = String("Start heating       ");
+        String L7 = String("Change Target Temp  " + arrow);   
+        printScreen(L1, blank, L3, L4, blank, L6, L7, blank);
+    }
+    else {
+        String L6 = String("Start heating       " + arrow);
+        String L7 = String("Change Target Temp  ");
+        printScreen(L1, blank, L3, L4, blank, L6, L7, blank);
+    }
+    return(selection);
 }
 
 /////////////////////////////////////////////////////////////////
