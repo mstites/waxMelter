@@ -72,24 +72,42 @@ void loop() {
 }
 
 /////////////////////////////////////////////////////////////////
-// State Handler ////////////////////////////////////////////////
+// State and Update Handler /////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 
-// recieve button presses and decide what to do 
-// track current state of things: 
-// current screen
-// status
-// action
-// save values
+byte MODE = 1; // 1 -> select, 2 -> adjust target temp
 byte SCREEN = 0; // screen number
-int PREV_SEL = 1; // selection indicator
+int SEL = 1; // selection
 
-// void updateStates
+void select(){
+  if (MODE == 1){ // SELECT
+    if (SCREEN == 0) { // standby
+      if (SEL == 1) {
+        // go to heating screen
+      }
+      else {
+        MODE == 2; // change target
+      }
+    }
+  }
 
+  else if (MODE == 2){ // ADJUST
+    // PRESS TO EXIT/SET
+  }
+}
+
+void arrow(int dir){
+  if (MODE == 1){ // SELECT
+    updateSelection(dir);
+  }
+  else if (MODE == 2){ // ADJUST
+    // adjust value up or down
+  }
+}
 void changeScreen(byte newScreen){
   if (SCREEN != newScreen) {
     SCREEN = newScreen; // update global
-    PREV_SEL = 1; // reset counter
+    SEL = 1; // reset counter
   }
 }
 
@@ -99,7 +117,7 @@ void changeScreen(byte newScreen){
 
 void updateSelection(int dir) { // should be done immediately
   if (SCREEN == 0) { // Standby
-    PREV_SEL = displayStandby(PREV_SEL, dir);
+    SEL = displayStandby(SEL, dir);
   }
 //  else if (SCREEN == 1) { // Heating
 //    continue;
@@ -168,13 +186,14 @@ int displayStandby(int prevSel, int dir) {
 
 void upPress(Button2& btn) {
     Serial.println("Up: Pressed");
-    updateSelection(1);
+    arrow(1);
 }
 
 void selectPress(Button2& btn) {
     unsigned int time = btn.wasPressedFor();
     if (time < 1000) {
         Serial.println("Select: Regular press");
+        select();
         togglePlatePower();
     } 
     else {
@@ -186,7 +205,7 @@ void selectPress(Button2& btn) {
 
 void downPress(Button2& btn) {
     Serial.println("Down: Pressed");
-    updateSelection(-1);
+    arrow(-1);
 }
 
 /////////////////////////////////////////////////////////////////
