@@ -116,23 +116,16 @@ void downPress(Button2& btn) {
 // MIDDLE BUTTON
 void middle(){
   if (MODE == 1){ // SELECT
-    if (SCREEN == 0) { // standby
-      if (SEL == 1) {
-        MODE = 2; // change target temp
-      }
-      else {
-        changeScreen(1); // go to heating screen
-        HEATING = true; 
-      }
+    if (SEL == 1) {
+       MODE = 2; // change target temp
     }
-    else if (SCREEN == 1) { // heating
-      if (SEL == 1) {
-        MODE = 2; // change target temp
-      }
-      else {
-        HEATING = false;
-        changeScreen(0); // go to standby screen 
-      }
+    else if (SCREEN == 0) {
+       changeScreen(1); // go to heating screen
+       HEATING = true; 
+    }
+    else if (SCREEN == 1) {
+       HEATING = false; 
+       changeScreen(0); // go to heating screen     
     }
   }
   else if (MODE == 2){ // ADJUST
