@@ -33,9 +33,11 @@ SSD1306AsciiWire oled;
 // State Values /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 
-boolean platePower = false; // pwr to relay controlling hotplate
+boolean HEATING = false; // heating
+boolean PLATE_POWER = false; // pwr to relay controlling hotplate
 byte MODE = 1; // 1 -> select, 2 -> adjust target temp
 int SEL = 1; // selection
+int CURRENT_TEMP = 0; // current temperature
 int TARGET_TEMP = 130; // target temperature
 byte SCREEN = 0; // CURRENT SCREEN 0-STANDBY, 1-HEATING
 
@@ -52,7 +54,7 @@ void setup() {
   Wire.setClock(400000l);
   oled.begin(&Adafruit128x64, I2C_ADDRESS);
   oled.setFont(System5x7);
-  standbyScreen(1, 1, TARGET_TEMP);
+  standbyScreen(1, 1, CURRENT_TEMP, TARGET_TEMP);
 
   delay(1000);
   // set button handlers
@@ -72,6 +74,9 @@ void loop() {
   select_button.loop();
   down_button.loop();
 
+  // loop to update temperature
+  // loop to manage power plate
+
   // global state value to track current state, can be updated by buttons?
   
 }
@@ -90,12 +95,12 @@ void selectPress(Button2& btn) {
     if (time < 1000) {
         Serial.println("Select: Regular press");
         middle();
-        togglePlatePower();
     } 
     else {
         Serial.println("Select: long press");
         Serial.println("Turning OFF");
-        setPlatePower(false);
+        HEATING = false;
+        PLATE_POWER = false; // should be handled somewhere else
     }
 }
 
@@ -114,6 +119,7 @@ void middle(){
     if (SCREEN == 0) { // standby
       if (SEL == 1) {
         changeScreen(1); // go to heating screen
+        HEATING = true; 
       }
       else {
         MODE = 2; // change target temp
@@ -131,11 +137,11 @@ void middle(){
 // BUTTOM/TOP BUTTON FUNCTIONALITY
 void arrow(int dir){
   if (MODE == 1){ // SELECT
-    refreshScreen(dir, TARGET_TEMP);
+    refreshScreen(dir, CURRENT_TEMP, TARGET_TEMP);
   }
   else if (MODE == 2){ // ADJUST
     TARGET_TEMP = TARGET_TEMP + dir; // change target temp
-    refreshScreen(0, TARGET_TEMP); // no selection change
+    refreshScreen(0, CURRENT_TEMP, TARGET_TEMP); // no selection change
   }
   Serial.println(SEL);
 }
@@ -180,25 +186,26 @@ int compSelection (int maxSel, int prevSel, int dir) {
 }
 
 // REFRESH SCREEN
-void refreshScreen(int dir, int target) { // should be done immediately
+void refreshScreen(int dir, int temp, int target) { // should be done immediately
   if (SCREEN == 0) { // STANDBY
-    SEL = standbyScreen(SEL, dir, target);
+    SEL = standbyScreen(SEL, dir, temp, target);
   }
   else if (SCREEN == 1) { // HEATING
-    SEL = heatingScreen(SEL, dir, target);
+    SEL = heatingScreen(SEL, dir, temp, target);
   }
 }
 
 // STANDBY SCREEN - Screen 0
-int standbyScreen(int prevSel, int dir, int target) {
+int standbyScreen(int prevSel, int dir, int temp, int target) {
     int maxSel = 2; 
     int selection = compSelection(maxSel, prevSel, dir);
     String arrow = String("`");
-    String L1 = String("STATUS: STANDBY");
+    String tempCurrent = String(temp);
+    String tempTarget = String(target);
     String blank = String("");
-//    String L3 = String("Current temp      000");
-    String L3 = String(target);
-    String L4 = String("Temp target       000");
+    String L1 = String("STATUS: STANDBY");
+    String L3 = String("Current temp      " + tempCurrent);
+    String L4 = String("Temp target       " + tempTarget);
     if (selection == 2) {
         String L6 = String("Start heating       ");
         String L7 = String("Change Target Temp  " + arrow);   
@@ -213,7 +220,7 @@ int standbyScreen(int prevSel, int dir, int target) {
 }
 
 // HEATING SCREEN - Screen 1
-int heatingScreen(int prevSel, int dir, int target) {
+int heatingScreen(int prevSel, int dir, int temp, int target) {
     int maxSel = 2; 
     int selection = compSelection(maxSel, prevSel, dir);
     String arrow = String("`");
@@ -240,7 +247,7 @@ int heatingScreen(int prevSel, int dir, int target) {
 
 // flip state of wax heater
 void togglePlatePower() {
-  if (platePower) {
+  if (PLATE_POWER) {
     setPlatePower(false);
   }
   else {
@@ -250,21 +257,21 @@ void togglePlatePower() {
 
 // set the state of wax heater to desired
 void setPlatePower(boolean desired) {
-   if (platePower == desired) {
+   if (PLATE_POWER == desired) {
        ; // do nothing
    }
    else if (desired == false){
     // set false, turn off 
-    platePower = false;
+    PLATE_POWER = false;
     digitalWrite(PLATE_POWER_PIN, LOW);
    }
    else {
     // set true, turn on
-    platePower = true;
+    PLATE_POWER = true;
     digitalWrite(PLATE_POWER_PIN, HIGH);    
    }
    Serial.print("Plate power: ");
-   Serial.println(platePower);
+   Serial.println(PLATE_POWER);
 }
 
 
