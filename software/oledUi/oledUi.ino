@@ -38,6 +38,7 @@ RunningMedian t_samples = RunningMedian(10); // reset count every 10 data points
 // State Values /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 int CURRENT_TEMP = 0; // current temperature
+int CURRENT_TEMP_LAST = 0; // last current temp
 int TARGET_TEMP = 130; // target temperature
 int FLIP_OFFSET = 2; // temperature offset to flip power on/off
 
@@ -49,7 +50,7 @@ byte MODE = 1; // 1 -> select, 2 -> adjust target temp
 int SEL = 1; // selection
 byte SCREEN = 0; // CURRENT SCREEN 0-STANDBY, 1-HEATING
 
-long TIME; //milis
+long TIME; //milis 
 
 /////////////////////////////////////////////////////////////////
 
@@ -86,13 +87,18 @@ void loop() {
   select_button.loop();
   down_button.loop();
 
-  int temp_read = tempLogger();
-  if ((temp_read != 0) && (abs(CURRENT_TEMP - temp_read) >= 2)) {
-    CURRENT_TEMP = temp_read;
-    refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
-  }
-
+  tempLogger();
   controlPlate();
+  // if within five of target temp, update every 2 temp
+  if ((abs(TARGET_TEMP - CURRENT_TEMP) <= 5) && (abs(CURRENT_TEMP - CURRENT_TEMP_LAST) >= 2)) { 
+    refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
+    CURRENT_TEMP_LAST = CURRENT_TEMP;
+  }
+  else if (abs(CURRENT_TEMP - CURRENT_TEMP_LAST) >= 5) { // otherwise only for steps of 5
+    refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
+    CURRENT_TEMP_LAST = CURRENT_TEMP;
+  }
+//  refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
 
   // loop to update temperature
   // loop to manage power plate
@@ -228,12 +234,12 @@ int standbyScreen(int prevSel, int dir, int temp, int target) {
     String L1 = String("STATUS: STANDBY");
     String L3 = String("Current temp      " + tempCurrent);
     String L4 = String("Temp target       " + tempTarget);
-    if ((selection == 1) && (selection != prevSel)) {
+    if (selection == 1) {
         String L8 = String("Start heating       ");
         String L6 = String("Change Target Temp  " + arrow);
         printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
     }
-    else if (selection != prevSel) {
+    else {
         String L8 = String("Start heating       " + arrow);
         String L6 = String("Change Target Temp  ");   
         printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
@@ -252,12 +258,12 @@ int heatingScreen(int prevSel, int dir, int temp, int target) {
     String L1 = String("STATUS: HEATING");
     String L3 = String("Current temp      " + tempCurrent);
     String L4 = String("Temp target       " + tempTarget);
-    if ((selection == 1) && (selection != prevSel)) {
+    if (selection == 1) {
         String L6 = String("Change Target Temp  " + arrow);
         String L8 = String("Cancel/Exit         ");
         printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
     }
-    else if (selection != prevSel) {
+    else {
         String L6 = String("Change Target Temp  ");
         String L8 = String("Cancel/Exit         " + arrow);
         printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
@@ -279,18 +285,17 @@ float readTemp(){
   return (vOut - 1.25)/0.009 + 32 + 50;
 }
 
-int tempLogger(){
-  int m = 0;
+// UPDATES CURRENT TEMP
+void tempLogger(){
   if (TIME > next) {
     t_samples.add(readTemp());
     t_count++;
     next = TIME + 100;
     if (t_count == 10) {
-       m = t_samples.getMedian();
+       CURRENT_TEMP = t_samples.getMedian();
        t_count = 0;
     }
   }
-  return (m);
 }
 
 /////////////////////////////////////////////////////////////////
