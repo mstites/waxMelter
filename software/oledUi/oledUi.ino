@@ -84,7 +84,7 @@ void loop() {
   down_button.loop();
 
   int temp_read = tempLogger();
-  if ((temp_read != 0) && (abs(CURRENT_TEMP - temp_read) > 2)) {
+  if ((temp_read != 0) && (abs(CURRENT_TEMP - temp_read) >= 2)) {
     CURRENT_TEMP = temp_read;
     refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
   }
@@ -221,12 +221,12 @@ int standbyScreen(int prevSel, int dir, int temp, int target) {
     String L1 = String("STATUS: STANDBY");
     String L3 = String("Current temp      " + tempCurrent);
     String L4 = String("Temp target       " + tempTarget);
-    if (selection == 1) {
+    if ((selection == 1) && (selection != prevSel)) {
         String L8 = String("Start heating       ");
         String L6 = String("Change Target Temp  " + arrow);
         printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
     }
-    else {
+    else if (selection != prevSel) {
         String L8 = String("Start heating       " + arrow);
         String L6 = String("Change Target Temp  ");   
         printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
@@ -245,12 +245,12 @@ int heatingScreen(int prevSel, int dir, int temp, int target) {
     String L1 = String("STATUS: HEATING");
     String L3 = String("Current temp      " + tempCurrent);
     String L4 = String("Temp target       " + tempTarget);
-    if (selection == 1) {
+    if ((selection == 1) && (selection != prevSel)) {
         String L6 = String("Change Target Temp  " + arrow);
         String L8 = String("Cancel/Exit         ");
         printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
     }
-    else {
+    else if (selection != prevSel) {
         String L6 = String("Change Target Temp  ");
         String L8 = String("Cancel/Exit         " + arrow);
         printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
