@@ -37,13 +37,16 @@ RunningMedian t_samples = RunningMedian(10); // reset count every 10 data points
 /////////////////////////////////////////////////////////////////
 // State Values /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
+int CURRENT_TEMP = 0; // current temperature
+int TARGET_TEMP = 130; // target temperature
+int FLIP_OFFSET = 2; // temperature offset to flip power on/off
 
 boolean HEATING = false; // heating
 boolean PLATE_POWER = false; // pwr to relay controlling hotplate
+boolean HEATED = false; // at temp
+
 byte MODE = 1; // 1 -> select, 2 -> adjust target temp
 int SEL = 1; // selection
-int CURRENT_TEMP = 0; // current temperature
-int TARGET_TEMP = 130; // target temperature
 byte SCREEN = 0; // CURRENT SCREEN 0-STANDBY, 1-HEATING
 
 long TIME; //milis
@@ -88,6 +91,8 @@ void loop() {
     CURRENT_TEMP = temp_read;
     refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
   }
+
+  controlPlate();
 
   // loop to update temperature
   // loop to manage power plate
@@ -137,9 +142,11 @@ void middle(){
     else if (SCREEN == 0) {
        changeScreen(1); // go to heating screen
        HEATING = true; 
+       HEATED = false; // reset
     }
     else if (SCREEN == 1) {
        HEATING = false; 
+       HEATED = false; // reset
        changeScreen(0); // go to heating screen     
     }
   }
@@ -290,17 +297,24 @@ int tempLogger(){
 // Plate Control ////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 
-// flip state of wax heater
-void togglePlatePower() {
-  if (PLATE_POWER) {
-    setPlatePower(false);
+// CONTROL POWER VIA RELAY
+void controlPlate() {
+  if (HEATING){
+    if ((CURRENT_TEMP - TARGET_TEMP) >= FLIP_OFFSET) {
+      setPlatePower(false);
+      HEATED = true;
+    }
+    else if (CURRENT_TEMP <= (TARGET_TEMP - FLIP_OFFSET)) {
+      setPlatePower(true);
+      HEATED = true;
+    }
   }
-  else {
-    setPlatePower(true);
+  else if (PLATE_POWER){ // off with plate on
+      setPlatePower(false);
   }
 }
 
-// set the state of wax heater to desired
+// SET DESIRED STATE
 void setPlatePower(boolean desired) {
    if (PLATE_POWER == desired) {
        ; // do nothing
