@@ -54,7 +54,7 @@ void setup() {
   oled.setFont(System5x7);
   standbyScreen(1, 1, TARGET_TEMP);
 
-  delay(5000);
+  delay(1000);
   // set button handlers
   up_button.setTapHandler(upPress);
   select_button.setTapHandler(selectPress);
@@ -116,7 +116,6 @@ void middle(){
         changeScreen(1); // go to heating screen
       }
       else {
-        Serial.println("Change target temp");
         MODE = 2; // change target temp
       }
     }
@@ -126,7 +125,6 @@ void middle(){
   }
   else if (MODE == 2){ // ADJUST
     MODE = 1; // back to select mode
-    Serial.print("Back to select mode");
   }
 }
 
