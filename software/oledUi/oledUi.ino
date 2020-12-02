@@ -1,8 +1,9 @@
 /////////////////////////////////////////////////////////////////
 
 #include "Button2.h";
+#include "RunningMedian.h"
 
-// OlED
+// OLED
 #include <Wire.h>
 #include "SSD1306Ascii.h"
 #include "SSD1306AsciiWire.h"
@@ -12,6 +13,7 @@
 // Pin Assignments //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 const int PLATE_POWER_PIN = 26;
+const int TEMP_SENSOR_PIN = A1;
 
 const int UP_BUTTON_PIN = A8;
 const int SELECT_BUTTON_PIN = A9;
@@ -26,8 +28,11 @@ Button2 up_button = Button2(UP_BUTTON_PIN);
 Button2 select_button = Button2(SELECT_BUTTON_PIN);
 Button2 down_button = Button2(DOWN_BUTTON_PIN);
 
-// OlED //
+// OLED //
 SSD1306AsciiWire oled;
+
+// MEDIAN FOR TEMPS //
+RunningMedian t_samples = RunningMedian(10); // reset count every 10 data points
 
 /////////////////////////////////////////////////////////////////
 // State Values /////////////////////////////////////////////////
@@ -40,6 +45,8 @@ int SEL = 1; // selection
 int CURRENT_TEMP = 0; // current temperature
 int TARGET_TEMP = 130; // target temperature
 byte SCREEN = 0; // CURRENT SCREEN 0-STANDBY, 1-HEATING
+
+long TIME; //milis
 
 /////////////////////////////////////////////////////////////////
 
@@ -69,10 +76,18 @@ void setup() {
 /////////////////////////////////////////////////////////////////
 
 void loop() {
+  TIME = millis();
+  
   // initalize constant checking
   up_button.loop();
   select_button.loop();
   down_button.loop();
+
+  int temp_read = tempLogger();
+  if ((temp_read != 0) && (abs(CURRENT_TEMP - temp_read) > 2)) {
+    CURRENT_TEMP = temp_read;
+    refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
+  }
 
   // loop to update temperature
   // loop to manage power plate
@@ -244,6 +259,34 @@ int heatingScreen(int prevSel, int dir, int temp, int target) {
 }
 
 /////////////////////////////////////////////////////////////////
+// Temperature Management ///////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+int t_count = 0;
+long next = 0;
+
+// READ TEMP
+float readTemp(){
+  float vOut;
+  vOut = analogRead(TEMP_SENSOR_PIN) * (3.3/4095); // 12 bit resolution
+  return (vOut - 1.25)/0.009 + 32 + 50;
+}
+
+int tempLogger(){
+  int m = 0;
+  if (TIME > next) {
+    t_samples.add(readTemp());
+    t_count++;
+    next = TIME + 100;
+    if (t_count == 10) {
+       m = t_samples.getMedian();
+       t_count = 0;
+    }
+  }
+  return (m);
+}
+
+/////////////////////////////////////////////////////////////////
 // Plate Control ////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 
@@ -275,6 +318,5 @@ void setPlatePower(boolean desired) {
    Serial.print("Plate power: ");
    Serial.println(PLATE_POWER);
 }
-
 
 /////////////////////////////////////////////////////////////////
