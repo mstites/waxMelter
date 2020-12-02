@@ -118,15 +118,21 @@ void middle(){
   if (MODE == 1){ // SELECT
     if (SCREEN == 0) { // standby
       if (SEL == 1) {
+        MODE = 2; // change target temp
+      }
+      else {
         changeScreen(1); // go to heating screen
         HEATING = true; 
       }
-      else {
-        MODE = 2; // change target temp
-      }
     }
     else if (SCREEN == 1) { // heating
-      
+      if (SEL == 1) {
+        MODE = 2; // change target temp
+      }
+      else {
+        HEATING = false;
+        changeScreen(0); // go to standby screen 
+      }
     }
   }
   else if (MODE == 2){ // ADJUST
@@ -151,6 +157,7 @@ void changeScreen(byte newScreen){
   if (SCREEN != newScreen) {
     SCREEN = newScreen; // update global
     SEL = 1; // reset counter
+    refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
   }
 }
 
@@ -206,15 +213,15 @@ int standbyScreen(int prevSel, int dir, int temp, int target) {
     String L1 = String("STATUS: STANDBY");
     String L3 = String("Current temp      " + tempCurrent);
     String L4 = String("Temp target       " + tempTarget);
-    if (selection == 2) {
-        String L6 = String("Start heating       ");
-        String L7 = String("Change Target Temp  " + arrow);   
-        printScreen(L1, blank, L3, L4, blank, L6, L7, blank);
+    if (selection == 1) {
+        String L8 = String("Start heating       ");
+        String L6 = String("Change Target Temp  " + arrow);
+        printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
     }
     else {
-        String L6 = String("Start heating       " + arrow);
-        String L7 = String("Change Target Temp  ");
-        printScreen(L1, blank, L3, L4, blank, L6, L7, blank);
+        String L8 = String("Start heating       " + arrow);
+        String L6 = String("Change Target Temp  ");   
+        printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
     }
     return(selection);
 }
@@ -224,19 +231,21 @@ int heatingScreen(int prevSel, int dir, int temp, int target) {
     int maxSel = 2; 
     int selection = compSelection(maxSel, prevSel, dir);
     String arrow = String("`");
-    String L1 = String("STATUS: STANDBY");
+    String tempCurrent = String(temp);
+    String tempTarget = String(target);
     String blank = String("");
-    String L3 = String("Current temp      000");
-    String L4 = String("Temp target       000");
-    if (selection == 2) {
-        String L6 = String("Start heating       ");
-        String L7 = String("Change Target Temp  " + arrow);   
-        printScreen(L1, blank, L3, L4, blank, L6, L7, blank);
+    String L1 = String("STATUS: HEATING");
+    String L3 = String("Current temp      " + tempCurrent);
+    String L4 = String("Temp target       " + tempTarget);
+    if (selection == 1) {
+        String L6 = String("Change Target Temp  " + arrow);
+        String L8 = String("Cancel/Exit         ");
+        printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
     }
     else {
-        String L6 = String("Start heating       " + arrow);
-        String L7 = String("Change Target Temp  ");
-        printScreen(L1, blank, L3, L4, blank, L6, L7, blank);
+        String L6 = String("Change Target Temp  ");
+        String L8 = String("Cancel/Exit         " + arrow);
+        printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
     }
     return(selection);
 }
