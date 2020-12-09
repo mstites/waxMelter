@@ -43,20 +43,20 @@ RunningMedian t_samples = RunningMedian(10); // reset count every 10 data points
 // mode -> had another part to it
 // selection -> new variable name (selectedMenuItem)
 
-int CURRENT_TEMP = 0;           // current temperature
-int CURRENT_TEMP_LAST = 0;      // last current temp
-int TARGET_TEMP = 130;          // target temperature
-int FLIP_OFFSET = 2;            // temperature offset to flip power on/off
+int currentTemp = 0;            // current temperature
+int prevTemp = 0;               // last current temp
+int targetTemp = 130;           // target temperature
+int flipOffset = 2;             // temperature offset to flip power on/off
 
-boolean HEATING = false;        // heating
-boolean PLATE_POWER = false;    // pwr to relay controlling hotplate
-boolean HEATED = false;         // at temp
+boolean heating = false;        // heating
+boolean platePower = false;     // pwr to relay controlling hotplate
+boolean heated = false;         // at temp
 
-byte MODE = 1;                  // 1 -> select, 2 -> adjust target temp
-int SEL = 1;                    // line selection on OLED
-byte SCREEN = 0;                // CURRENT SCREEN 0-STANDBY, 1-HEATING
+byte buttonMode = 1;            // 1 -> select, 2 -> adjust target temp
+int lineSelection = 1;          // line selected on OLED
+byte currentScreen = 0;         // 0-STANDBY, 1-HEATING
 
-long TIME; //milis 
+long currTime;                  // milis 
 
 /////////////////////////////////////////////////////////////////
 
@@ -69,7 +69,7 @@ void setup() {
   Wire.setClock(400000l);
   oled.begin(&Adafruit128x64, I2C_ADDRESS);
   oled.setFont(System5x7);
-  standbyScreen(1, 1, CURRENT_TEMP, TARGET_TEMP);
+  standbyScreen(1, 1, currentTemp, targetTemp);
 
   delay(1000);
   // set button handlers
@@ -86,7 +86,7 @@ void setup() {
 void loop() {
   // variables camel case
   
-  TIME = millis();
+  currTime = millis();
   
   // initalize constant checking
   up_button.loop();
@@ -96,15 +96,15 @@ void loop() {
   tempLogger();
   controlPlate();
   // if within five of target temp, update every 2 temp
-  if ((abs(TARGET_TEMP - CURRENT_TEMP) <= 5) && (abs(CURRENT_TEMP - CURRENT_TEMP_LAST) >= 2)) { 
-    refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
-    CURRENT_TEMP_LAST = CURRENT_TEMP;
+  if ((abs(targetTemp - currentTemp) <= 5) && (abs(currentTemp - prevTemp) >= 2)) { 
+    refreshScreen(0, currentTemp, targetTemp);
+    prevTemp = currentTemp;
   }
-  else if (abs(CURRENT_TEMP - CURRENT_TEMP_LAST) >= 5) { // otherwise only for steps of 5
-    refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
-    CURRENT_TEMP_LAST = CURRENT_TEMP;
+  else if (abs(currentTemp - prevTemp) >= 5) { // otherwise only for steps of 5
+    refreshScreen(0, currentTemp, targetTemp);
+    prevTemp = currentTemp;
   }
-//  refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
+//  refreshScreen(0, currentTemp, targetTemp);
 
   // loop to update temperature
   // loop to manage power plate
@@ -131,8 +131,8 @@ void selectPress(Button2& btn) {
     else {
         Serial.println("Select: long press");
         Serial.println("Turning OFF");
-        HEATING = false;
-        PLATE_POWER = false; // should be handled somewhere else
+        heating = false;
+        platePower = false; // should be handled somewhere else
     }
 }
 
@@ -147,44 +147,44 @@ void downPress(Button2& btn) {
 
 // MIDDLE BUTTON
 void middle(){
-  if (MODE == 1){           // SELECT
-    if (SEL == 1) {
-       MODE = 2;            // change target temp
+  if (buttonMode == 1){               // SELECT
+    if (lineSelection == 1) {
+       buttonMode = 2;                // change target temp
     }
-    else if (SCREEN == 0) {
-       changeScreen(1);     // go to heating screen
-       HEATING = true; 
-       HEATED = false;      // reset
+    else if (currentScreen == 0) {
+       changeScreen(1);               // go to heating screen
+       heating = true; 
+       heated = false;                // reset
     }
-    else if (SCREEN == 1) {
-       HEATING = false; 
-       HEATED = false;      // reset
-       changeScreen(0);     // go to heating screen     
+    else if (currentScreen == 1) {
+       heating = false; 
+       heated = false;                // reset
+       changeScreen(0);               // go to heating screen     
     }
   }
-  else if (MODE == 2){      // ADJUST
-    MODE = 1;               // back to select mode
+  else if (buttonMode == 2){          // ADJUST
+    buttonMode = 1;                   // back to select mode
   }
 }
 
 // BUTTOM/TOP BUTTON FUNCTIONALITY
 void arrow(int dir){
-  if (MODE == 1){           // SELECT
-    refreshScreen(dir, CURRENT_TEMP, TARGET_TEMP);
+  if (buttonMode == 1){               // SELECT
+    refreshScreen(dir, currentTemp, targetTemp);
   }
-  else if (MODE == 2){      // ADJUST
-    TARGET_TEMP = TARGET_TEMP + dir; // change target temp
-    refreshScreen(0, CURRENT_TEMP, TARGET_TEMP); // no selection change
+  else if (buttonMode == 2){          // ADJUST
+    targetTemp = targetTemp + dir;    // change target temp
+    refreshScreen(0, currentTemp, targetTemp); // no selection change
   }
-  Serial.println(SEL);
+  Serial.println(lineSelection);
 }
 
 // CHANGE TO NEW SCREEN
 void changeScreen(byte newScreen){
-  if (SCREEN != newScreen) {
-    SCREEN = newScreen;     // update global
-    SEL = 1;                // reset counter
-    refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
+  if (currentScreen != newScreen) {
+    currentScreen = newScreen;               // update global
+    lineSelection = 1;                // reset counter
+    refreshScreen(0, currentTemp, targetTemp);
   }
 }
 
@@ -221,11 +221,11 @@ int compSelection (int maxSel, int prevSel, int dir) {
 
 // REFRESH SCREEN
 void refreshScreen(int dir, int temp, int target) { // should be done immediately
-  if (SCREEN == 0) { // STANDBY
-    SEL = standbyScreen(SEL, dir, temp, target);
+  if (currentScreen == 0) { // STANDBY
+    lineSelection = standbyScreen(lineSelection, dir, temp, target);
   }
-  else if (SCREEN == 1) { // HEATING
-    SEL = heatingScreen(SEL, dir, temp, target);
+  else if (currentScreen == 1) { // heating
+    lineSelection = heatingScreen(lineSelection, dir, temp, target);
   }
 }
 
@@ -253,7 +253,7 @@ int standbyScreen(int prevSel, int dir, int temp, int target) {
     return(selection);
 }
 
-// HEATING SCREEN - Screen 1
+// 1 SCREEN - Screen 1
 int heatingScreen(int prevSel, int dir, int temp, int target) {
     int maxSel = 2; 
     int selection = compSelection(maxSel, prevSel, dir);
@@ -293,12 +293,12 @@ float readTemp(){
 
 // UPDATES CURRENT TEMP
 void tempLogger(){
-  if (TIME > next) {
+  if (currTime > next) {
     t_samples.add(readTemp());
     t_count++;
-    next = TIME + 100;
+    next = currTime + 100;
     if (t_count == 10) {
-       CURRENT_TEMP = t_samples.getMedian();
+       currentTemp = t_samples.getMedian();
        t_count = 0;
     }
   }
@@ -310,38 +310,38 @@ void tempLogger(){
 
 // CONTROL POWER VIA RELAY
 void controlPlate() {
-  if (HEATING){
-    if ((CURRENT_TEMP - TARGET_TEMP) >= FLIP_OFFSET) {
+  if (heating){
+    if ((currentTemp - targetTemp) >= flipOffset) {
       setPlatePower(false);
-      HEATED = true;
+      heated = true;
     }
-    else if (CURRENT_TEMP <= (TARGET_TEMP - FLIP_OFFSET)) {
+    else if (currentTemp <= (targetTemp - flipOffset)) {
       setPlatePower(true);
-      HEATED = true;
+      heated = true;
     }
   }
-  else if (PLATE_POWER){ // off with plate on
+  else if (platePower){ // off with plate on
       setPlatePower(false);
   }
 }
 
 // SET DESIRED STATE
 void setPlatePower(boolean desired) {
-   if (PLATE_POWER == desired) {
+   if (platePower == desired) {
        ; // do nothing
    }
    else if (desired == false){
     // set false, turn off 
-    PLATE_POWER = false;
+    platePower = false;
     digitalWrite(PLATE_POWER_PIN, LOW);
    }
    else {
     // set true, turn on
-    PLATE_POWER = true;
+    platePower = true;
     digitalWrite(PLATE_POWER_PIN, HIGH);    
    }
    Serial.print("Plate power: ");
-   Serial.println(PLATE_POWER);
+   Serial.println(platePower);
 }
 
 /////////////////////////////////////////////////////////////////
