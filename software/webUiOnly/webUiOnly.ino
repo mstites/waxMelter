@@ -25,7 +25,7 @@ int flipOffset = 2;             // temperature offset to flip power on/off
 boolean heating = false;        // heating
 
 const char* PARAM_INPUT_1 = "targTempInput";
-const char* PARAM_INPUT_2 = "enable_arm_input";
+const char* PARAM_INPUT_2 = "state";
 
 // Network information
 const char* ssid = "GoofZone";
@@ -64,7 +64,7 @@ const char index_html[] PROGMEM = R"rawliteral(
   <h2>Controls</h2>
 
   <!--TARGET TEMP-->
-  <form action="/submit">
+  <form action="/update">
     Enter new target: <input type="number" step="1" name="targTempInput" value="%NEW_TARGET%" required>
     <input type="submit" value="Submit">
   </form>
@@ -73,8 +73,8 @@ const char index_html[] PROGMEM = R"rawliteral(
   %HEAT_SLIDER%
   <script>function toggleCheckbox(element) {
     var xhr = new XMLHttpRequest();
-    if(element.checked){ xhr.open("GET", "/updateSlider?output="+element.id+"&state=1", true); }
-    else { xhr.open("GET", "/updateSlider?output="+element.id+"&state=0", true); }
+    if(element.checked){ xhr.open("GET", "/update?output="+element.id+"&state=1", true); }
+    else { xhr.open("GET", "/update?output="+element.id+"&state=0", true); }
     xhr.send();
   }
   </script>
@@ -109,7 +109,7 @@ String processor(const String& var){
   }
   else if(var == "HEAT_SLIDER"){
     String buttons = "";
-    buttons += "<h4>HEAT</h4><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" " + outputState() + "><span class=\"slider\"></span></label>";
+    buttons += "<h4>HEATING: </h4><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" id=\"2\" " + outputState() + "><span class=\"slider\"></span></label>";
     return buttons;
   }
   return String();
@@ -133,15 +133,22 @@ void setup() {
   });
 
   // Receive an HTTP GET request at <ESP_IP>/get?targTempInput=<inputMessage>&enable_arm_input=<inputMessage2>
-  server.on("/submit", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    if (request->hasParam(PARAM_INPUT_1)) { // if input
+  server.on("/update", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    if (request->hasParam(PARAM_INPUT_1)) { // if input is a numeric temp update
       targetTemp = (request->getParam(PARAM_INPUT_1)->value()).toInt();
+      Serial.println(String(targetTemp));
     }
-    Serial.println(String(targetTemp));
-    request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
-  });
-  server.on("/updateSlider", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    Serial.println(heating);
+    else if (request->hasParam(PARAM_INPUT_2)) { // if input is button state change
+      int input = (request->getParam(PARAM_INPUT_2)->value()).toInt();
+      if (input == 1){
+        heating = true;
+      }
+      else {
+        heating = false;
+      }
+      Serial.println(input);
+      
+    }
     request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
   });
   server.onNotFound(notFound);
