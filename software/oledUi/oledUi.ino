@@ -1,4 +1,4 @@
-1/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 
 #include "Button2.h";
 #include "RunningMedian.h"
@@ -43,18 +43,18 @@ RunningMedian t_samples = RunningMedian(10); // reset count every 10 data points
 // mode -> had another part to it
 // selection -> new variable name (selectedMenuItem)
 
-int CURRENT_TEMP = 0; // current temperature
-int CURRENT_TEMP_LAST = 0; // last current temp
-int TARGET_TEMP = 130; // target temperature
-int FLIP_OFFSET = 2; // temperature offset to flip power on/off
+int CURRENT_TEMP = 0;           // current temperature
+int CURRENT_TEMP_LAST = 0;      // last current temp
+int TARGET_TEMP = 130;          // target temperature
+int FLIP_OFFSET = 2;            // temperature offset to flip power on/off
 
-boolean HEATING = false; // heating
-boolean PLATE_POWER = false; // pwr to relay controlling hotplate
-boolean HEATED = false; // at temp
+boolean HEATING = false;        // heating
+boolean PLATE_POWER = false;    // pwr to relay controlling hotplate
+boolean HEATED = false;         // at temp
 
-byte MODE = 1; // 1 -> select, 2 -> adjust target temp
-int SEL = 1; // line selection on OLED
-byte SCREEN = 0; // CURRENT SCREEN 0-STANDBY, 1-HEATING
+byte MODE = 1;                  // 1 -> select, 2 -> adjust target temp
+int SEL = 1;                    // line selection on OLED
+byte SCREEN = 0;                // CURRENT SCREEN 0-STANDBY, 1-HEATING
 
 long TIME; //milis 
 
@@ -147,32 +147,32 @@ void downPress(Button2& btn) {
 
 // MIDDLE BUTTON
 void middle(){
-  if (MODE == 1){ // SELECT
+  if (MODE == 1){           // SELECT
     if (SEL == 1) {
-       MODE = 2; // change target temp
+       MODE = 2;            // change target temp
     }
     else if (SCREEN == 0) {
-       changeScreen(1); // go to heating screen
+       changeScreen(1);     // go to heating screen
        HEATING = true; 
-       HEATED = false; // reset
+       HEATED = false;      // reset
     }
     else if (SCREEN == 1) {
        HEATING = false; 
-       HEATED = false; // reset
-       changeScreen(0); // go to heating screen     
+       HEATED = false;      // reset
+       changeScreen(0);     // go to heating screen     
     }
   }
-  else if (MODE == 2){ // ADJUST
-    MODE = 1; // back to select mode
+  else if (MODE == 2){      // ADJUST
+    MODE = 1;               // back to select mode
   }
 }
 
 // BUTTOM/TOP BUTTON FUNCTIONALITY
 void arrow(int dir){
-  if (MODE == 1){ // SELECT
+  if (MODE == 1){           // SELECT
     refreshScreen(dir, CURRENT_TEMP, TARGET_TEMP);
   }
-  else if (MODE == 2){ // ADJUST
+  else if (MODE == 2){      // ADJUST
     TARGET_TEMP = TARGET_TEMP + dir; // change target temp
     refreshScreen(0, CURRENT_TEMP, TARGET_TEMP); // no selection change
   }
@@ -182,8 +182,8 @@ void arrow(int dir){
 // CHANGE TO NEW SCREEN
 void changeScreen(byte newScreen){
   if (SCREEN != newScreen) {
-    SCREEN = newScreen; // update global
-    SEL = 1; // reset counter
+    SCREEN = newScreen;     // update global
+    SEL = 1;                // reset counter
     refreshScreen(0, CURRENT_TEMP, TARGET_TEMP);
   }
 }
