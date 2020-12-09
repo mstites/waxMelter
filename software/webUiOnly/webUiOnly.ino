@@ -24,7 +24,8 @@ int flipOffset = 2;             // temperature offset to flip power on/off
 
 boolean heating = false;        // heating
 
-
+const char* PARAM_INPUT_1 = "targTempInput";
+const char* PARAM_INPUT_2 = "enable_arm_input";
 
 // Network information
 const char* ssid = "GoofZone";
@@ -34,7 +35,7 @@ const char* password = "9139122626";
 String inputMessage = String(targetTemp);
 String lastTemperature;
 
-// HTML web page to handle 2 input fields (threshold_input, enable_arm_input)
+// HTML web page to handle 2 input fields (targTempInput, enable_arm_input)
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html><head>
   <title>Wax Melter Control</title>
@@ -64,7 +65,7 @@ const char index_html[] PROGMEM = R"rawliteral(
 
   <!--TARGET TEMP-->
   <form action="/submit">
-    Enter new target: <input type="number" step="1" name="threshold_input" value="%NEW_TARGET%" required>
+    Enter new target: <input type="number" step="1" name="targTempInput" value="%NEW_TARGET%" required>
     <input type="submit" value="Submit">
   </form>
   
@@ -131,9 +132,12 @@ void setup() {
     request->send_P(200, "text/html", index_html, processor);
   });
 
-  // Receive an HTTP GET request at <ESP_IP>/get?threshold_input=<inputMessage>&enable_arm_input=<inputMessage2>
+  // Receive an HTTP GET request at <ESP_IP>/get?targTempInput=<inputMessage>&enable_arm_input=<inputMessage2>
   server.on("/submit", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    Serial.println(inputMessage);
+    if (request->hasParam(PARAM_INPUT_1)) { // if input
+      targetTemp = (request->getParam(PARAM_INPUT_1)->value()).toInt();
+    }
+    Serial.println(String(targetTemp));
     request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
   });
   server.on("/updateSlider", HTTP_GET, [] (AsyncWebServerRequest *request) {
