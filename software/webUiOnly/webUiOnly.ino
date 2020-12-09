@@ -12,15 +12,23 @@
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <Wire.h>
-#include <OneWire.h>
-#include <DallasTemperature.h>
+
+
+// PASSED FROM REST OF CODE
+int currentTemp = 0;            // current temperature
+int targetTemp = 130;           // target temperature
+int flipOffset = 2;             // temperature offset to flip power on/off
+
+boolean heating = false;        // heating
+
+
 
 // REPLACE WITH YOUR NETWORK CREDENTIALS
 const char* ssid = "GoofZone";
 const char* password = "9139122626";
 
 // Default Threshold Temperature Value
-String inputMessage = "25.0";
+String inputMessage = String(targetTemp);
 String lastTemperature;
 String enableArmChecked = "checked";
 String inputMessage2 = "true";
@@ -28,17 +36,22 @@ String inputMessage2 = "true";
 // HTML web page to handle 2 input fields (threshold_input, enable_arm_input)
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html><head>
-  <title>Temperature Threshold Output Control</title>
+  <title>Wax Melter Control</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   </head><body>
-  <h2>DS18B20 Temperature</h2> 
-  <h3>%TEMPERATURE% &deg;C</h3>
-  <h2>ESP Arm Trigger</h2>
+  <h2>Status</h2> 
+  <h3>Status: TODO </h3>
+  <h3>Current Temperature: %CURR_TEMP% &deg;F</h3>
+  <h3>Target Temperature: %TARG_TEMP% &deg;F</h3>
+  <h2>Controls</h2>
   <form action="/get">
-    Temperature Threshold <input type="number" step="0.1" name="threshold_input" value="%THRESHOLD%" required><br>
-    Arm Trigger <input type="checkbox" name="enable_arm_input" value="true" %ENABLE_ARM_INPUT%><br><br>
+    Enter new target: <input type="number" step="1" name="threshold_input" value="%TARGET%" required>
     <input type="submit" value="Submit">
   </form>
+  <form action="/get">
+      Heat: <input type="checkbox" name="enable_arm_input" value="true" %HEAT%>
+      <input type="submit" value="Submit">
+   </form>
 </body></html>)rawliteral";
 
 void notFound(AsyncWebServerRequest *request) {
@@ -47,16 +60,19 @@ void notFound(AsyncWebServerRequest *request) {
 
 AsyncWebServer server(80);
 
-// Replaces placeholder with DS18B20 values
+// Replaces HTML placeholder with values
 String processor(const String& var){
   //Serial.println(var);
-  if(var == "TEMPERATURE"){
-    return lastTemperature;
+  if(var == "CURR_TEMP"){
+    return String(currentTemp);
   }
-  else if(var == "THRESHOLD"){
+  else if(var == "TARG_TEMP"){
+    return String(targetTemp);
+  }
+  else if(var == "TARGET"){
     return inputMessage;
   }
-  else if(var == "ENABLE_ARM_INPUT"){
+  else if(var == "HEAT"){
     return enableArmChecked;
   }
   return String();
@@ -72,16 +88,6 @@ const char* PARAM_INPUT_2 = "enable_arm_input";
 unsigned long previousMillis = 0;     
 const long interval = 5000;    
 
-// GPIO where the output is connected to
-const int output = 2;
-
-// GPIO where the DS18B20 is connected to
-const int oneWireBus = 4;     
-// Setup a oneWire instance to communicate with any OneWire devices
-OneWire oneWire(oneWireBus);
-// Pass our oneWire reference to Dallas Temperature sensor 
-DallasTemperature sensors(&oneWire);
-
 void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
@@ -93,12 +99,6 @@ void setup() {
   Serial.println();
   Serial.print("ESP IP Address: http://");
   Serial.println(WiFi.localIP());
-  
-  pinMode(output, OUTPUT);
-  digitalWrite(output, LOW);
-  
-  // Start the DS18B20 sensor
-  sensors.begin();
   
   // Send web page to client
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -130,36 +130,4 @@ void setup() {
 
 void loop() {
   unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis;
-    sensors.requestTemperatures();
-    // Temperature in Celsius degrees 
-    float temperature = sensors.getTempCByIndex(0);
-    Serial.print(temperature);
-    Serial.println(" *C");
-    
-    // Temperature in Fahrenheit degrees
-    /*float temperature = sensors.getTempFByIndex(0);
-    Serial.print(temperature);
-    Serial.println(" *F");*/
-    
-    lastTemperature = String(temperature);
-    
-    // Check if temperature is above threshold and if it needs to trigger output
-    if(temperature > inputMessage.toFloat() && inputMessage2 == "true" && !triggerActive){
-      String message = String("Temperature above threshold. Current temperature: ") + 
-                            String(temperature) + String("C");
-      Serial.println(message);
-      triggerActive = true;
-      digitalWrite(output, HIGH);
-    }
-    // Check if temperature is below threshold and if it needs to trigger output
-    else if((temperature < inputMessage.toFloat()) && inputMessage2 == "true" && triggerActive) {
-      String message = String("Temperature below threshold. Current temperature: ") + 
-                            String(temperature) + String(" C");
-      Serial.println(message);
-      triggerActive = false;
-      digitalWrite(output, LOW);
-    }
-  }
 }
