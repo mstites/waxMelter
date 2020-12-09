@@ -8,6 +8,9 @@
   The above copyright notice and this permission notice shall be included in all
   copies or substantial portions of the Software.
 ********/
+
+// HEAT -> https://randomnerdtutorials.com/esp32-async-web-server-espasyncwebserver-library/
+
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
@@ -23,15 +26,13 @@ boolean heating = false;        // heating
 
 
 
-// REPLACE WITH YOUR NETWORK CREDENTIALS
+// Network information
 const char* ssid = "GoofZone";
 const char* password = "9139122626";
 
 // Default Threshold Temperature Value
 String inputMessage = String(targetTemp);
 String lastTemperature;
-String enableArmChecked = "checked";
-String inputMessage2 = "true";
 
 // HTML web page to handle 2 input fields (threshold_input, enable_arm_input)
 const char index_html[] PROGMEM = R"rawliteral(
@@ -45,13 +46,9 @@ const char index_html[] PROGMEM = R"rawliteral(
   <h3>Target Temperature: %TARG_TEMP% &deg;F</h3>
   <h2>Controls</h2>
   <form action="/get">
-    Enter new target: <input type="number" step="1" name="threshold_input" value="%TARGET%" required>
+    Enter new target: <input type="number" step="1" name="threshold_input" value="%NEW_TARGET%" required>
     <input type="submit" value="Submit">
   </form>
-  <form action="/get">
-      Heat: <input type="checkbox" name="enable_arm_input" value="true" %HEAT%>
-      <input type="submit" value="Submit">
-   </form>
 </body></html>)rawliteral";
 
 void notFound(AsyncWebServerRequest *request) {
@@ -60,7 +57,7 @@ void notFound(AsyncWebServerRequest *request) {
 
 AsyncWebServer server(80);
 
-// Replaces HTML placeholder with values
+// Assign HTML placeholder values vars
 String processor(const String& var){
   //Serial.println(var);
   if(var == "CURR_TEMP"){
@@ -69,24 +66,11 @@ String processor(const String& var){
   else if(var == "TARG_TEMP"){
     return String(targetTemp);
   }
-  else if(var == "TARGET"){
+  else if(var == "NEW_TARGET"){
     return inputMessage;
-  }
-  else if(var == "HEAT"){
-    return enableArmChecked;
   }
   return String();
 }
-
-// Flag variable to keep track if triggers was activated or not
-bool triggerActive = false;
-
-const char* PARAM_INPUT_1 = "threshold_input";
-const char* PARAM_INPUT_2 = "enable_arm_input";
-
-// Interval between sensor readings. Learn more about ESP32 timers: https://RandomNerdTutorials.com/esp32-pir-motion-sensor-interrupts-timers/
-unsigned long previousMillis = 0;     
-const long interval = 5000;    
 
 void setup() {
   Serial.begin(115200);
@@ -107,21 +91,7 @@ void setup() {
 
   // Receive an HTTP GET request at <ESP_IP>/get?threshold_input=<inputMessage>&enable_arm_input=<inputMessage2>
   server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    // GET threshold_input value on <ESP_IP>/get?threshold_input=<inputMessage>
-    if (request->hasParam(PARAM_INPUT_1)) {
-      inputMessage = request->getParam(PARAM_INPUT_1)->value();
-      // GET enable_arm_input value on <ESP_IP>/get?enable_arm_input=<inputMessage2>
-      if (request->hasParam(PARAM_INPUT_2)) {
-        inputMessage2 = request->getParam(PARAM_INPUT_2)->value();
-        enableArmChecked = "checked";
-      }
-      else {
-        inputMessage2 = "false";
-        enableArmChecked = "";
-      }
-    }
     Serial.println(inputMessage);
-    Serial.println(inputMessage2);
     request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
   });
   server.onNotFound(notFound);
