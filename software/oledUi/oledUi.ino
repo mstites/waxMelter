@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////
+1/////////////////////////////////////////////////////////////////
 
 #include "Button2.h";
 #include "RunningMedian.h"
@@ -37,6 +37,12 @@ RunningMedian t_samples = RunningMedian(10); // reset count every 10 data points
 /////////////////////////////////////////////////////////////////
 // State Values /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
+
+// variables currentTemp
+// line up comments
+// mode -> had another part to it
+// selection -> new variable name (selectedMenuItem)
+
 int CURRENT_TEMP = 0; // current temperature
 int CURRENT_TEMP_LAST = 0; // last current temp
 int TARGET_TEMP = 130; // target temperature
@@ -47,7 +53,7 @@ boolean PLATE_POWER = false; // pwr to relay controlling hotplate
 boolean HEATED = false; // at temp
 
 byte MODE = 1; // 1 -> select, 2 -> adjust target temp
-int SEL = 1; // selection
+int SEL = 1; // line selection on OLED
 byte SCREEN = 0; // CURRENT SCREEN 0-STANDBY, 1-HEATING
 
 long TIME; //milis 
@@ -57,9 +63,7 @@ long TIME; //milis
 void setup() {
   // open serial
   Serial.begin(9600);
-  while (!Serial) {
-    delay(20);
-  }
+
   // init display
   Wire.begin();
   Wire.setClock(400000l);
@@ -80,6 +84,8 @@ void setup() {
 /////////////////////////////////////////////////////////////////
 
 void loop() {
+  // variables camel case
+  
   TIME = millis();
   
   // initalize constant checking
