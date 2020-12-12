@@ -25,20 +25,31 @@ int flipOffset = 2;             // temperature offset to flip power on/off
 boolean heating = false;        // heating
 
 
-
-const char* PARAM_INPUT_1 = "targTempInput";
-const char* PARAM_INPUT_2 = "state";
-
 // Network information
 const char* ssid = "GoofZone";
 const char* password = "9139122626";
 
-// Default Threshold Temperature Value
-String inputMessage = String(targetTemp);
-String lastTemperature;
+void setup() {  
+  Serial.begin(115200);
+  startWebUi();
+}
 
-// HTML web page to handle 2 input fields (targTempInput, enable_arm_input)
-const char index_html[] PROGMEM = R"rawliteral(
+void loop() {
+}
+
+
+/////////////////////////////////////////////////////////////////
+// Web UI Values ////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+AsyncWebServer server(80);
+
+// Pointers to the field values
+const char* PARAM_INPUT_1 = "targTempInput";
+const char* PARAM_INPUT_2 = "state";
+
+// HTML CODE
+const char INDEX_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html><head>
   <title>Wax Melter Control</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -82,10 +93,15 @@ const char index_html[] PROGMEM = R"rawliteral(
   </script>
 </body></html>)rawliteral";
 
+/////////////////////////////////////////////////////////////////
+// Web UI Support Functions /////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
 void notFound(AsyncWebServerRequest *request) {
   request->send(404, "text/plain", "Not found");
 }
 
+// Translate C variable to HTML button look
 String outputState(){
   if(heating){
     return "checked";
@@ -95,19 +111,17 @@ String outputState(){
   }
 }
 
-AsyncWebServer server(80);
-
 // Assign HTML placeholder values vars
 String processor(const String& var){
   //Serial.println(var);
   if(var == "CURR_TEMP"){
-    return String(currentTemp);
+    return String(currentTemp); // current temp status
   }
   else if(var == "TARG_TEMP"){
-    return String(targetTemp);
+    return String(targetTemp); // target temp status
   }
   else if(var == "NEW_TARGET"){
-    return inputMessage;
+    return String(targetTemp); // new target value in field
   }
   else if(var == "HEAT_SLIDER"){
     String buttons = "";
@@ -117,17 +131,8 @@ String processor(const String& var){
   return String();
 }
 
-void setup() {  
-  Serial.begin(115200);
-  startWebUi();
-}
-
-void loop() {
-}
-
-
 /////////////////////////////////////////////////////////////////
-// Web UI ///////////////////////////////////////////////////////
+// Web UI Startup ///////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 
 void startWifi() {
@@ -149,7 +154,7 @@ void printAddress() {
 void serverInit() {
   // DEFAULT BEHAVIOR
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", index_html, processor);
+    request->send_P(200, "text/html", INDEX_HTML, processor);
   });
 
   // USER UPDATE BEHAVIOR
@@ -169,7 +174,7 @@ void serverInit() {
       Serial.println(input);     
     }
     // Page after user inputs: 
-    request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
+    request->send(200, "text/html", "Request sent to your wax melter.<br><a href=\"/\">Return to Home Page</a>");
   });
   server.onNotFound(notFound);
   server.begin();
