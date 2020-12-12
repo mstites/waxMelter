@@ -110,15 +110,7 @@ void loop() {
 
   tempLogger();
   controlPlate();
-  // if within five of target temp, update every 2 temp
-  if ((abs(targetTemp - currentTemp) <= 5) && (abs(currentTemp - prevTemp) >= 2)) { 
-    refreshScreen(0, currentTemp, targetTemp);
-    prevTemp = currentTemp;
-  }
-  else if (abs(currentTemp - prevTemp) >= 5) { // otherwise only for steps of 5
-    refreshScreen(0, currentTemp, targetTemp);
-    prevTemp = currentTemp;
-  }
+  updateOLED();
 //  refreshScreen(0, currentTemp, targetTemp);
 
   // loop to update temperature
@@ -206,6 +198,35 @@ void changeScreen(byte newScreen){
 /////////////////////////////////////////////////////////////////
 // OLED Display /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
+
+unsigned long oled_next = 0;
+
+void updateOLED() {
+    // if within five of target temp, update every 2 temp
+    if ((abs(targetTemp - currentTemp) <= 5) && (abs(currentTemp - prevTemp) >= 2)) { 
+      refreshScreen(0, currentTemp, targetTemp);
+      prevTemp = currentTemp;
+    }
+    else if (abs(currentTemp - prevTemp) >= 5) { // otherwise only for steps of 5
+      refreshScreen(0, currentTemp, targetTemp);
+      prevTemp = currentTemp;
+    }
+    if (currTime > oled_next) {
+      oled_next = currTime + 500;
+      checkHeatingStatus();
+    }
+}
+
+void checkHeatingStatus() {
+  // Checks if OLED is correct given status, and refreshes as needed
+  // needed because of web UI
+  if ((heating) && (currentScreen != 1)) {
+    changeScreen(1);
+  }
+  else if (!(heating) && (currentScreen != 0)) {
+    changeScreen(0);
+  }
+}
 
 // WRITE SCREEN
 void printScreen(String L1, String L2, String L3, String L4, String L5, String L6, String L7, String L8) {
@@ -297,7 +318,7 @@ int heatingScreen(int prevSel, int dir, int temp, int target) {
 /////////////////////////////////////////////////////////////////
 
 int t_count = 0;
-long next = 0;
+unsigned long temp_count_next = 0;
 
 // READ TEMP
 float readTemp(){
@@ -308,10 +329,10 @@ float readTemp(){
 
 // UPDATES CURRENT TEMP
 void tempLogger(){
-  if (currTime > next) {
+  if (currTime > temp_count_next) {
     t_samples.add(readTemp());
     t_count++;
-    next = currTime + 100;
+    temp_count_next = currTime + 100;
     if (t_count == 10) {
        currentTemp = t_samples.getMedian();
        t_count = 0;
@@ -374,6 +395,7 @@ const char INDEX_HTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html><head>
   <title>Wax Melter Control</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="10">
 
   <!--STYLE INFO-->
   <style>
