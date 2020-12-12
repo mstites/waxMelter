@@ -14,7 +14,7 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include <Wire.h>
+//#include <Wire.h> 
 
 
 // PASSED FROM REST OF CODE
@@ -23,6 +23,8 @@ int targetTemp = 130;           // target temperature
 int flipOffset = 2;             // temperature offset to flip power on/off
 
 boolean heating = false;        // heating
+
+
 
 const char* PARAM_INPUT_1 = "targTempInput";
 const char* PARAM_INPUT_2 = "state";
@@ -117,28 +119,46 @@ String processor(const String& var){
 
 void setup() {  
   Serial.begin(115200);
+  startWebUi();
+}
+
+void loop() {
+}
+
+
+/////////////////////////////////////////////////////////////////
+// Web UI ///////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+void startWifi() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   if (WiFi.waitForConnectResult() != WL_CONNECTED) {
     Serial.println("WiFi Failed!");
     return;
   }
+}
+
+void printAddress() {
   Serial.println();
   Serial.print("ESP IP Address: http://");
   Serial.println(WiFi.localIP());
   
-  // Send web page to client
+}
+
+void serverInit() {
+  // DEFAULT BEHAVIOR
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/html", index_html, processor);
   });
 
-  // Receive an HTTP GET request at <ESP_IP>/get?targTempInput=<inputMessage>&enable_arm_input=<inputMessage2>
+  // USER UPDATE BEHAVIOR
   server.on("/update", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    if (request->hasParam(PARAM_INPUT_1)) { // if input is a numeric temp update
+    if (request->hasParam(PARAM_INPUT_1)) {           // if target temp change
       targetTemp = (request->getParam(PARAM_INPUT_1)->value()).toInt();
       Serial.println(String(targetTemp));
     }
-    else if (request->hasParam(PARAM_INPUT_2)) { // if input is button state change
+    else if (request->hasParam(PARAM_INPUT_2)) {      // if heating status change
       int input = (request->getParam(PARAM_INPUT_2)->value()).toInt();
       if (input == 1){
         heating = true;
@@ -146,15 +166,18 @@ void setup() {
       else {
         heating = false;
       }
-      Serial.println(input);
-      
+      Serial.println(input);     
     }
+    // Page after user inputs: 
     request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
   });
   server.onNotFound(notFound);
   server.begin();
 }
 
-void loop() {
-  unsigned long currentMillis = millis();
+void startWebUi() {
+  startWifi();
+  printAddress();
+  serverInit();
+
 }
