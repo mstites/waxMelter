@@ -400,9 +400,11 @@ const char INDEX_HTML[] PROGMEM = R"rawliteral(
   <!--STYLE INFO-->
   <style>
   html {font-family: Arial; display: inline-block; text-align: center;}
-  h2 {font-size: 3.0rem;}
-  p {font-size: 3.0rem;}
-  body {max-width: 600px; margin:0px auto; padding-bottom: 25px;}
+  h1 {font-size: 3.0rem;}
+  h2 {font-size: 2.0rem;}
+  h3 {font-weight: normal;}
+  p {font-size: 1.0rem;}
+  body {max-width: 600px; margin:0px auto; padding-bottom: 25px; padding-top: 25px;}
   .switch {position: relative; display: inline-block; width: 120px; height: 68px} 
   .switch input {display: none}
   .slider {position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border-radius: 6px}
@@ -413,18 +415,18 @@ const char INDEX_HTML[] PROGMEM = R"rawliteral(
   </head><body>
 
   <!--STATUS INDICATORS-->
-  <h2>Status</h2> 
-  <h3>Status: TODO </h3>
+  <h1>Wax Melter</h1> 
+  <p style="font-style: italic;">Page refreshes every 10 seconds</p>
+  <h2>Temp Status</h2>
   <h3>Current Temperature: %CURR_TEMP% &deg;F</h3>
   <h3>Target Temperature: %TARG_TEMP% &deg;F</h3>
-  <h2>Controls</h2>
-
+  <h2>Control</h2>
   <!--TARGET TEMP-->
-  <form action="/update">
-    Enter new target: <input type="number" step="1" name="targTempInput" value="%NEW_TARGET%" required>
+  <h3>New target: </h3>
+    <form action="/update">
+    <input type="number" step="1" name="targTempInput" value="%NEW_TARGET%" required>
     <input type="submit" value="Submit">
   </form>
-  
   <!--BUTTON SLIDER-->
   %HEAT_SLIDER%
   <script>function toggleCheckbox(element) {
@@ -468,7 +470,7 @@ String processor(const String& var){
   }
   else if(var == "HEAT_SLIDER"){
     String buttons = "";
-    buttons += "<h4>HEATING: </h4><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" id=\"2\" " + outputState() + "><span class=\"slider\"></span></label>";
+    buttons += "<h3>Heating:</h3><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" id=\"2\" " + outputState() + "><span class=\"slider\"></span></label>";
     return buttons;
   }
   return String();
