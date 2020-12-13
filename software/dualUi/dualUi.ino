@@ -9,6 +9,11 @@
 #include "SSD1306AsciiWire.h"
 #define I2C_ADDRESS 0x3C // 7bit address, 8bit address is 0x78
 
+// WEB UI
+#include <WiFi.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+
 /////////////////////////////////////////////////////////////////
 // Pin Assignments //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
@@ -56,7 +61,14 @@ byte buttonMode = 1;            // 1 -> select, 2 -> adjust target temp
 int lineSelection = 1;          // line selected on OLED
 byte currentScreen = 0;         // 0-STANDBY, 1-HEATING
 
-long currTime;                  // milis 
+unsigned long currTime;                  // milis 
+
+/////////////////////////////////////////////////////////////////
+// Network Info  ////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+const char* ssid = "GoofZone";
+const char* password = "9139122626";
 
 /////////////////////////////////////////////////////////////////
 
@@ -70,6 +82,9 @@ void setup() {
   oled.begin(&Adafruit128x64, I2C_ADDRESS);
   oled.setFont(System5x7);
   standbyScreen(1, 1, currentTemp, targetTemp);
+
+  // start web ui
+  startWebUi();
 
   delay(1000);
   // set button handlers
@@ -95,15 +110,7 @@ void loop() {
 
   tempLogger();
   controlPlate();
-  // if within five of target temp, update every 2 temp
-  if ((abs(targetTemp - currentTemp) <= 5) && (abs(currentTemp - prevTemp) >= 2)) { 
-    refreshScreen(0, currentTemp, targetTemp);
-    prevTemp = currentTemp;
-  }
-  else if (abs(currentTemp - prevTemp) >= 5) { // otherwise only for steps of 5
-    refreshScreen(0, currentTemp, targetTemp);
-    prevTemp = currentTemp;
-  }
+  updateOLED();
 //  refreshScreen(0, currentTemp, targetTemp);
 
   // loop to update temperature
@@ -191,6 +198,35 @@ void changeScreen(byte newScreen){
 /////////////////////////////////////////////////////////////////
 // OLED Display /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
+
+unsigned long oled_next = 0;
+
+void updateOLED() {
+    // if within five of target temp, update every 2 temp
+    if ((abs(targetTemp - currentTemp) <= 5) && (abs(currentTemp - prevTemp) >= 2)) { 
+      refreshScreen(0, currentTemp, targetTemp);
+      prevTemp = currentTemp;
+    }
+    else if (abs(currentTemp - prevTemp) >= 5) { // otherwise only for steps of 5
+      refreshScreen(0, currentTemp, targetTemp);
+      prevTemp = currentTemp;
+    }
+    if (currTime > oled_next) {
+      oled_next = currTime + 500;
+      checkHeatingStatus();
+    }
+}
+
+void checkHeatingStatus() {
+  // Checks if OLED is correct given status, and refreshes as needed
+  // needed because of web UI
+  if ((heating) && (currentScreen != 1)) {
+    changeScreen(1);
+  }
+  else if (!(heating) && (currentScreen != 0)) {
+    changeScreen(0);
+  }
+}
 
 // WRITE SCREEN
 void printScreen(String L1, String L2, String L3, String L4, String L5, String L6, String L7, String L8) {
@@ -282,7 +318,7 @@ int heatingScreen(int prevSel, int dir, int temp, int target) {
 /////////////////////////////////////////////////////////////////
 
 int t_count = 0;
-long next = 0;
+unsigned long temp_count_next = 0;
 
 // READ TEMP
 float readTemp(){
@@ -293,10 +329,10 @@ float readTemp(){
 
 // UPDATES CURRENT TEMP
 void tempLogger(){
-  if (currTime > next) {
+  if (currTime > temp_count_next) {
     t_samples.add(readTemp());
     t_count++;
-    next = currTime + 100;
+    temp_count_next = currTime + 100;
     if (t_count == 10) {
        currentTemp = t_samples.getMedian();
        t_count = 0;
@@ -343,5 +379,158 @@ void setPlatePower(boolean desired) {
    Serial.print("Plate power: ");
    Serial.println(platePower);
 }
+
+/////////////////////////////////////////////////////////////////
+// Web UI Values ////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+AsyncWebServer server(80);
+
+// Pointers to the field values
+const char* PARAM_INPUT_1 = "targTempInput";
+const char* PARAM_INPUT_2 = "state";
+
+// HTML CODE
+const char INDEX_HTML[] PROGMEM = R"rawliteral(
+<!DOCTYPE HTML><html><head>
+  <title>Wax Melter Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="10">
+
+  <!--STYLE INFO-->
+  <style>
+  html {font-family: Arial; display: inline-block; text-align: center;}
+  h1 {font-size: 3.0rem;}
+  h2 {font-size: 2.0rem;}
+  h3 {font-weight: normal;}
+  p {font-size: 1.0rem;}
+  body {max-width: 600px; margin:0px auto; padding-bottom: 25px; padding-top: 25px;}
+  .switch {position: relative; display: inline-block; width: 120px; height: 68px} 
+  .switch input {display: none}
+  .slider {position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border-radius: 6px}
+  .slider:before {position: absolute; content: ""; height: 52px; width: 52px; left: 8px; bottom: 8px; background-color: #fff; -webkit-transition: .4s; transition: .4s; border-radius: 3px}
+  input:checked+.slider {background-color: #b30000}
+  input:checked+.slider:before {-webkit-transform: translateX(52px); -ms-transform: translateX(52px); transform: translateX(52px)}
+  </style>
+  </head><body>
+
+  <!--STATUS INDICATORS-->
+  <h1>Wax Melter</h1> 
+  <p style="font-style: italic;">Page refreshes every 10 seconds</p>
+  <h2>Temp Status</h2>
+  <h3>Current Temperature: %CURR_TEMP% &deg;F</h3>
+  <h3>Target Temperature: %TARG_TEMP% &deg;F</h3>
+  <h2>Control</h2>
+  <!--TARGET TEMP-->
+  <h3>New target: </h3>
+    <form action="/update">
+    <input type="number" step="1" name="targTempInput" value="%NEW_TARGET%" required>
+    <input type="submit" value="Submit">
+  </form>
+  <!--BUTTON SLIDER-->
+  %HEAT_SLIDER%
+  <script>function toggleCheckbox(element) {
+    var xhr = new XMLHttpRequest();
+    if(element.checked){ xhr.open("GET", "/update?output="+element.id+"&state=1", true); }
+    else { xhr.open("GET", "/update?output="+element.id+"&state=0", true); }
+    xhr.send();
+  }
+  </script>
+</body></html>)rawliteral";
+
+/////////////////////////////////////////////////////////////////
+// Web UI Support Functions /////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+void notFound(AsyncWebServerRequest *request) {
+  request->send(404, "text/plain", "Not found");
+}
+
+// Translate C variable to HTML button look
+String outputState(){
+  if(heating){
+    return "checked";
+  }
+  else {
+    return "";
+  }
+}
+
+// Assign HTML placeholder values vars
+String processor(const String& var){
+  //Serial.println(var);
+  if(var == "CURR_TEMP"){
+    return String(currentTemp); // current temp status
+  }
+  else if(var == "TARG_TEMP"){
+    return String(targetTemp); // target temp status
+  }
+  else if(var == "NEW_TARGET"){
+    return String(targetTemp); // new target value in field
+  }
+  else if(var == "HEAT_SLIDER"){
+    String buttons = "";
+    buttons += "<h3>Heating:</h3><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" id=\"2\" " + outputState() + "><span class=\"slider\"></span></label>";
+    return buttons;
+  }
+  return String();
+}
+
+/////////////////////////////////////////////////////////////////
+// Web UI Startup ///////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+void startWifi() {
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.println("WiFi Failed!");
+    return;
+  }
+}
+
+void printAddress() {
+  Serial.println();
+  Serial.print("ESP IP Address: http://");
+  Serial.println(WiFi.localIP());
+  
+}
+
+void serverInit() {
+  // DEFAULT BEHAVIOR
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/html", INDEX_HTML, processor);
+  });
+
+  // USER UPDATE BEHAVIOR
+  server.on("/update", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    if (request->hasParam(PARAM_INPUT_1)) {           // if target temp change
+      targetTemp = (request->getParam(PARAM_INPUT_1)->value()).toInt();
+      Serial.println(String(targetTemp));
+    }
+    else if (request->hasParam(PARAM_INPUT_2)) {      // if heating status change
+      int input = (request->getParam(PARAM_INPUT_2)->value()).toInt();
+      if (input == 1){
+        heating = true;
+      }
+      else {
+        heating = false;
+      }
+      Serial.println(input);     
+    }
+    // Page after user inputs: 
+    request->send(200, "text/html", "Request sent to your wax melter.<br><a href=\"/\">Return to Home Page</a>");
+  });
+  server.onNotFound(notFound);
+  server.begin();
+}
+
+void startWebUi() {
+  startWifi();
+  printAddress();
+  serverInit();
+
+}
+
 
 /////////////////////////////////////////////////////////////////
