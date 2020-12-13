@@ -35,7 +35,7 @@ Button2 down_button = Button2(DOWN_BUTTON_PIN);
 
 // OLED //
 SSD1306AsciiWire oled;
-
+s
 // MEDIAN FOR TEMPS //
 RunningMedian t_samples = RunningMedian(10); // reset count every 10 data points
 
@@ -75,11 +75,6 @@ const char* password = "9139122626";
 void setup() {
   // open serial
   Serial.begin(9600);
-
-  // configure pins
-  pinMode(PLATE_POWER_PIN, OUTPUT);
-  pinMode(TEMP_SENSOR_PIN, INPUT);
-
   // init display
   Wire.begin();
   Wire.setClock(400000l);
@@ -96,13 +91,17 @@ void setup() {
   up_button.setTapHandler(upPress);
   select_button.setTapHandler(selectPress);
   down_button.setTapHandler(downPress);
+
+  // configure pins
+  pinMode(PLATE_POWER_PIN, OUTPUT);
+  pinMode(TEMP_SENSOR_PIN, INPUT);
+
 }
 
 /////////////////////////////////////////////////////////////////
 
 void loop() {
 //  Serial.println(analogRead(TEMP_SENSOR_PIN));
-  // variables camel case
   
   currTime = millis();
   
@@ -114,12 +113,6 @@ void loop() {
   tempLogger();
   controlPlate();
   updateOLED();
-//  refreshScreen(0, currentTemp, targetTemp);
-
-  // loop to update temperature
-  // loop to manage power plate
-
-  // global state value to track current state, can be updated by buttons?
   
 }
 
