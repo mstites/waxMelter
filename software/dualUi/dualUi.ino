@@ -18,7 +18,7 @@
 // Pin Assignments //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 const int PLATE_POWER_PIN = 26;
-const int TEMP_SENSOR_PIN = A1;
+const int TEMP_SENSOR_PIN = 25;
 
 const int UP_BUTTON_PIN = A8;
 const int SELECT_BUTTON_PIN = A9;
@@ -76,6 +76,10 @@ void setup() {
   // open serial
   Serial.begin(9600);
 
+  // configure pins
+  pinMode(PLATE_POWER_PIN, OUTPUT);
+  pinMode(TEMP_SENSOR_PIN, INPUT);
+
   // init display
   Wire.begin();
   Wire.setClock(400000l);
@@ -85,20 +89,19 @@ void setup() {
 
   // start web ui
   startWebUi();
+//  startWifi();
 
   delay(1000);
   // set button handlers
   up_button.setTapHandler(upPress);
   select_button.setTapHandler(selectPress);
   down_button.setTapHandler(downPress);
-
-  // configure pins
-  pinMode(PLATE_POWER_PIN, OUTPUT);
 }
 
 /////////////////////////////////////////////////////////////////
 
 void loop() {
+//  Serial.println(analogRead(TEMP_SENSOR_PIN));
   // variables camel case
   
   currTime = millis();
@@ -321,10 +324,11 @@ int t_count = 0;
 unsigned long temp_count_next = 0;
 
 // READ TEMP
-float readTemp(){
-  float vOut;
-  vOut = analogRead(TEMP_SENSOR_PIN) * (3.3/4095); // 12 bit resolution
-  return (vOut - 1.25)/0.009 + 32 + 50;
+int readTemp(){
+//  float vOut;
+//  vOut = analogRead(TEMP_SENSOR_PIN) * (3.3/4095); // 12 bit resolution
+//  return vOut*362.44-353.23;
+  return((0.2921*analogRead(TEMP_SENSOR_PIN)) - 353.233423);
 }
 
 // UPDATES CURRENT TEMP
