@@ -1,8 +1,14 @@
 # waxMelter
-Custom designed board and software for a PID controlled thermocouple feedback wax melter.
+Custom designed board and software for a bangbang controlled thermocouple feedback wax melter. Please see [project page](https://www.mstites.com/items/wax_melter.html) for more information.
 
-## Board Plan
-The board will regulate the container temperature and monitor the temperature of the wax to help it reach the right temperature and stay there. It will control a hot plate, which will heat a container containing the wax. The board will use temperature monitoring, temperature control via a hot plate, and remote control through a web platform.
+## Overview
+The board heats and maintains the temperature of a container of candle wax via controlling a hot plate with a relay power control. All code was written in C in an Arduino based environment for an Adafruit ESP32 Huzzah. There is a fully functional OLED and button UI and web based UI.
+
+## Files and Notes
+* For final software iteration please see [software/dualUi](software/dualUi). Software depends on the [espressif-esp32](https://github.com/espressif/arduino-esp32#using-through-arduino-ide) and [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer) libraries. Any other missing dependencies should be able to be installed through the Arduino IDE (eg [Button2](https://github.com/LennartHennigs/Button2), [RunningMedian](https://github.com/RobTillaart/RunningMedian)).
+* Project proposal is located in [proposal](proposal). This was a project for [ENGR3499-02: Microcontrollers for the Real World](http://reifel.org/realworld/) taught by Stan Reifel at Olin College of engineering. Though this project was also a passion work as I [make many candles](http://trandleboutique.com).
+* Final schematic, kicad files, and PCB files are located in [schematic](schematic). It should be noted that the final PCB I ended up with I had to make adjustments to. I had to disconnect the A1 to SENSOR_0 connection and reconnect SENSOR_0 to A2. The same would also have to be done with respect to A5 and SENSOR_1 (to some ADC1 pin). This is because the original pins, A1 and A5, I picked are connected to ADC2 on the ESP. Only ADC1 can be used while wifi is enabled ([see here for pin numbering](https://learn.adafruit.com/adafruit-huzzah32-esp32-feather/pinouts)).
+
 
 ## Parts List
 * [Adafruit HUZZAH32](https://www.adafruit.com/product/3591)
@@ -11,7 +17,7 @@ The board will regulate the container temperature and monitor the temperature of
 * [Hot Plate](https://www.amazon.com/gp/product/B07MMT2SC5/ref=ask_ql_qh_dp_hza)
 * [Outlet Power Relay](https://www.amazon.com/Iot-Relay-Enclosed-High-Power-Raspberry/dp/B00WV7GMA2/ref=sr_1_2?dchild=1&keywords=outlet+power+relay&qid=1601856536&sr=8-2)
 * [SPI OLED 128x64](https://www.amazon.com/UCTRONICS-SSD1306-Self-Luminous-Display-Raspberry/dp/B072Q2X2LL/ref=sr_1_3?dchild=1&keywords=oled+display+arduino&qid=1602386754&sr=8-3)
-* [SPST Switch](digikey.com) x6
+* SPST Switch x6
 * USB Power Supply
 * Micro USB Cable
 * LD1117V33 x2	
@@ -23,15 +29,3 @@ Sockets:
 * 16 pin x2
 * 12 pin x2
 * 4 pin x2
-
-## Implementation Plan
-The core of the system is the Adafruit HUZZAH32. I chose this particular micro controller because of its integrated wifi module and common use in IoT device spaces. The ESP32 is an updated version of the popular ESP8266. And has more GPIOs and is faster, and the boards come in around the same price. This last part means there is lots of documentation and support online for communicating with the device over wifi and hosting a web page on the device.
-The whole system will be controlled via a locally accessible web page broad-casted by the micro controller (my additional area of study). The website will contain the current temperature reading of the wax/container, the target temperature, and have a buttons for controlling the target temperature for the wax, as well as the power of the device. I am not currently planning on implementing a way to communicate with the micro controller remotely, as the use case of my board – making candles – means the user should be on the same local network.
-A secondary user interface will be visible via an OLED panel. This will have temperature readings and target temperature information. The OLED will be connected over I2C. Buttons will be placed below the panel to interact via this secondary user interface.
-The system will get temperature readings via the thermocouple connected via the thermocouple amplifier (AD8495). I am planning on building in two thermocouple channels, but only putting in components for one due to cost restrictions. With the one thermocouple, I can regulate the outside temperature of the container or the temperature of the wax. With a second thermocouple, I could also track the internal temperature of the wax in real time while tracking the temperature of the container.
-The thermocouple will be connected via a 2 position screw terminal. The thermocouple amplifier will be connected to one ADC input channel. 
-To control the temperature of the wax, the board will control a hot plate. This will be done by flipping the outlet on and off via the Outlet Power Relay, connected via a digital i/o pin. The specific software implementation will come with time, but a basic bang/bang controller could work with the limits for when to flip the switch determined in testing. Some sort of PID loop could be implemented if this did not work well enough.
-All of the modules support 3.3V logic. All power will be supplied by the usb adapter. Power will be stepped down for the micro by the onboard voltage regulator. The LD1117V33 will be used to power the OLED and the thermocouple modules. 
-
-## More Info
-See the [Proposal](proposal/proposal.pdf) for more information about the project.
