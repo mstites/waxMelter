@@ -17,8 +17,8 @@
 /////////////////////////////////////////////////////////////////
 // Pin Assignments //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-const int PLATE_POWER_PIN = 26;
-const int TEMP_SENSOR_PIN = 25;
+const int PLATE_POWER_PIN = A0;
+const int TEMP_SENSOR_PIN = A2;
 
 const int UP_BUTTON_PIN = A8;
 const int SELECT_BUTTON_PIN = A9;
@@ -198,8 +198,8 @@ void changeScreen(byte newScreen){
 unsigned long oled_next = 0;
 
 void updateOLED() {
-    // if within five of target temp, update every 2 temp
-    if ((abs(targetTemp - currentTemp) <= 5) && (abs(currentTemp - prevTemp) >= 2)) { 
+    // if within five of target temp, update every temp
+    if ((abs(targetTemp - currentTemp) <= 5) && (currentTemp != prevTemp)) { 
       refreshScreen(0, currentTemp, targetTemp);
       prevTemp = currentTemp;
     }
@@ -270,17 +270,18 @@ int standbyScreen(int prevSel, int dir, int temp, int target) {
     String tempTarget = String(target);
     String blank = String("");
     String L1 = String("STATUS: STANDBY");
+    String L2 = String("WEB: " + String(WiFi.localIP().toString().c_str()));
     String L3 = String("Current temp      " + tempCurrent);
     String L4 = String("Temp target       " + tempTarget);
     if (selection == 1) {
         String L8 = String("Start heating       ");
         String L6 = String("Change Target Temp  " + arrow);
-        printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
+        printScreen(L1, L2, L3, L4, blank, L6, blank, L8);
     }
     else {
         String L8 = String("Start heating       " + arrow);
         String L6 = String("Change Target Temp  ");   
-        printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
+        printScreen(L1, L2, L3, L4, blank, L6, blank, L8);
     }
     return(selection);
 }
@@ -294,17 +295,18 @@ int heatingScreen(int prevSel, int dir, int temp, int target) {
     String tempTarget = String(target);
     String blank = String("");
     String L1 = String("STATUS: HEATING");
+    String L2 = String("WEB: " + String(WiFi.localIP().toString().c_str()));  
     String L3 = String("Current temp      " + tempCurrent);
     String L4 = String("Temp target       " + tempTarget);
     if (selection == 1) {
         String L6 = String("Change Target Temp  " + arrow);
         String L8 = String("Cancel/Exit         ");
-        printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
+        printScreen(L1, L2, L3, L4, blank, L6, blank, L8);
     }
     else {
         String L6 = String("Change Target Temp  ");
         String L8 = String("Cancel/Exit         " + arrow);
-        printScreen(L1, blank, L3, L4, blank, L6, blank, L8);
+        printScreen(L1, L2, L3, L4, blank, L6, blank, L8);
     }
     return(selection);
 }
@@ -490,7 +492,6 @@ void printAddress() {
   Serial.println();
   Serial.print("ESP IP Address: http://");
   Serial.println(WiFi.localIP());
-  
 }
 
 void serverInit() {
@@ -522,11 +523,10 @@ void serverInit() {
   server.begin();
 }
 
-void startWebUi() {
+char startWebUi() {
   startWifi();
   printAddress();
   serverInit();
-
 }
 
 
