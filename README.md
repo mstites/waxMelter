@@ -6,7 +6,7 @@ The board heats and maintains the temperature of a container of candle wax via c
 
 ## Files and Notes
 * For final software iteration please see [software/dualUi](software/dualUi). Software depends on the [espressif-esp32](https://github.com/espressif/arduino-esp32#using-through-arduino-ide) and [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer) libraries. Any other missing dependencies should be able to be installed through the Arduino IDE (eg [Button2](https://github.com/LennartHennigs/Button2), [RunningMedian](https://github.com/RobTillaart/RunningMedian)).
-* Project proposal is located in [proposal](proposal). This was a project for [ENGR3499-02: Microcontrollers for the Real World](http://reifel.org/realworld/) taught by Stan Reifel at Olin College of engineering. Though this project was also a passion work as I [make many candles](trandleboutique.com).
+* Project proposal is located in [proposal](proposal). This was a project for [ENGR3499-02: Microcontrollers for the Real World](http://reifel.org/realworld/) taught by Stan Reifel at Olin College of engineering. Though this project was also a passion work as I [make many candles](http://trandleboutique.com).
 * Final schematic, kicad files, and PCB files are located in [schematic](schematic). It should be noted that the final PCB I ended up with I had to make adjustments to. I had to disconnect the A1 to SENSOR_0 connection and reconnect SENSOR_0 to A2. The same would also have to be done with respect to A5 and SENSOR_1 (to some ADC1 pin). This is because the original pins, A1 and A5, I picked are connected to ADC2 on the ESP. Only ADC1 can be used while wifi is enabled ([see here for pin numbering](https://learn.adafruit.com/adafruit-huzzah32-esp32-feather/pinouts)).
 
 
