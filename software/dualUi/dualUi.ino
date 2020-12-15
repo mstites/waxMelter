@@ -42,12 +42,6 @@ RunningMedian t_samples = RunningMedian(10); // reset count every 10 data points
 /////////////////////////////////////////////////////////////////
 // State Values /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-
-// variables currentTemp
-// line up comments
-// mode -> had another part to it
-// selection -> new variable name (selectedMenuItem)
-
 int currentTemp = 0;            // current temperature
 int prevTemp = 0;               // last current temp
 int targetTemp = 130;           // target temperature
@@ -185,7 +179,7 @@ void arrow(int dir){
 // CHANGE TO NEW SCREEN
 void changeScreen(byte newScreen){
   if (currentScreen != newScreen) {
-    currentScreen = newScreen;               // update global
+    currentScreen = newScreen;        // update global
     lineSelection = 1;                // reset counter
     refreshScreen(0, currentTemp, targetTemp);
   }
