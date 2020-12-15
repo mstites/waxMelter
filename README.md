@@ -1,8 +1,14 @@
 # waxMelter
 Custom designed board and software for a bangbang controlled thermocouple feedback wax melter. Please see [project page](https://www.mstites.com/items/wax_melter.html) for more information.
 
-## Board Plan
-The board will regulate the container temperature and monitor the temperature of the wax to help it reach the right temperature and stay there. It will control a hot plate, which will heat a container containing the wax. The board will use temperature mo5nitoring, temperature control via a hot plate, and remote control through a web platform.
+## Overview
+The board heats and maintains the temperature of a container of candle wax via controlling a hot plate with a relay power control. All code was written in C in an Arduino based environment for an Adafruit ESP32 Huzzah. There is a fully functional OLED and button UI and web based UI.
+
+## Files and Notes
+* For final software iteration please see [software/dualUi](software/dualUi). Software depends on the [espressif-esp32](https://github.com/espressif/arduino-esp32#using-through-arduino-ide) and [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer) libraries. Any other missing dependencies should be able to be installed through the Arduino IDE (eg [Button2](https://github.com/LennartHennigs/Button2), [RunningMedian](https://github.com/RobTillaart/RunningMedian)).
+* Project proposal is located in [proposal](proposal). This was a project for [ENGR3499-02: Microcontrollers for the Real World](http://reifel.org/realworld/) taught by Stan Reifel at Olin College of engineering. Though this project was also a passion work as I [make many candles](trandleboutique.com).
+* Final schematic, kicad files, and PCB files are located in [schematic](schematic). It should be noted that the final PCB I ended up with I had to make adjustments to. I had to disconnect the A1 to SENSOR_0 connection and reconnect SENSOR_0 to A2. The same would also have to be done with respect to A5 and SENSOR_1 (to some ADC1 pin). This is because the original pins, A1 and A5, I picked are connected to ADC2 on the ESP. Only ADC1 can be used while wifi is enabled ([see here for pin numbering](https://learn.adafruit.com/adafruit-huzzah32-esp32-feather/pinouts)).
+
 
 ## Parts List
 * [Adafruit HUZZAH32](https://www.adafruit.com/product/3591)
