@@ -205,8 +205,8 @@ void changeScreen(byte newScreen){
 unsigned long oled_next = 0;
 
 void updateOLED() {
-    // if within five of target temp, update every 2 temp
-    if ((abs(targetTemp - currentTemp) <= 5) && (abs(currentTemp - prevTemp) >= 2)) { 
+    // if within five of target temp, update every temp
+    if ((abs(targetTemp - currentTemp) <= 5) && (currentTemp != prevTemp) { 
       refreshScreen(0, currentTemp, targetTemp);
       prevTemp = currentTemp;
     }
